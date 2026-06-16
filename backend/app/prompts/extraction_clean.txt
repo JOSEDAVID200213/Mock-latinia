@@ -1,0 +1,24 @@
+Analiza la siguiente transcripción de reunión y extrae la información estructurada.
+
+Devuelve ÚNICAMENTE un JSON válido con la siguiente estructura exacta (sin texto adicional, sin markdown):
+
+{
+  "meeting_name": "Nombre de la reunión según el contexto",
+  "date_detected": "Fecha si se menciona (formato YYYY-MM-DD) o null",
+  "participants": ["Lista de participantes mencionados"],
+  "meeting_objective": "Objetivo principal de la reunión o null",
+  "topics_discussed": ["Tema 1", "Tema 2"],
+  "decisions_made": ["Decisión 1", "Decisión 2"],
+  "pending_tasks": [
+    {
+      "task": "Descripción de la tarea",
+      "responsible": "Nombre del responsable o null",
+      "deadline": "Fecha límite si se menciona o null"
+    }
+  ],
+  "risks_and_blockers": ["Riesgo o bloqueo identificado"],
+  "next_steps": ["Próximo paso 1", "Próximo paso 2"],
+  "executive_summary": "Resumen ejecutivo de 3-5 oraciones."
+}
+
+TRANSCRIPCIÓN:

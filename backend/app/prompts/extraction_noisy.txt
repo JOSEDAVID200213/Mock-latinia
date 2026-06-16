@@ -1,0 +1,36 @@
+CONTEXTO ADICIONAL IMPORTANTE:
+El texto fue extraído de un documento con formato {format_type} y puede contener errores o artefactos de la conversión. Ten en cuenta lo siguiente:
+
+- Ignora caracteres sueltos, secuencias sin sentido, o texto corrupto.
+- Intenta reconstruir palabras que estén cortadas o mal formateadas.
+- Los saltos de línea pueden no corresponder a párrafos reales.
+- Si detectas texto duplicado (encabezados/pies de página repetidos), ignóralo.
+- Prioriza extraer la información que puedas identificar con confianza.
+- Si un dato es ambiguo debido a la calidad del texto, márcalo con "(verificar)" al final.
+
+A pesar de los posibles errores en el texto fuente, genera un resumen estructurado lo más completo posible.
+
+Analiza la siguiente transcripción de reunión y extrae la información estructurada.
+
+Devuelve ÚNICAMENTE un JSON válido con la siguiente estructura exacta (sin texto adicional, sin markdown):
+
+{
+  "meeting_name": "Nombre de la reunión según el contexto",
+  "date_detected": "Fecha si se menciona (formato YYYY-MM-DD) o null",
+  "participants": ["Lista de participantes mencionados"],
+  "meeting_objective": "Objetivo principal de la reunión o null",
+  "topics_discussed": ["Tema 1", "Tema 2"],
+  "decisions_made": ["Decisión 1", "Decisión 2"],
+  "pending_tasks": [
+    {
+      "task": "Descripción de la tarea",
+      "responsible": "Nombre del responsable o null",
+      "deadline": "Fecha límite si se menciona o null"
+    }
+  ],
+  "risks_and_blockers": ["Riesgo o bloqueo identificado"],
+  "next_steps": ["Próximo paso 1", "Próximo paso 2"],
+  "executive_summary": "Resumen ejecutivo de 3-5 oraciones."
+}
+
+TRANSCRIPCIÓN:
