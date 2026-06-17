@@ -62,15 +62,20 @@ class FileExtractor:
             FileFormat.RTF: self._extract_rtf,
         }[file_format]
 
-        text, method_name, warnings = extract_method(file_path)
+        try:
+            text, method_name, warnings = extract_method(file_path)
+        except ExtractionError:
+            raise
+        except Exception as e:
+            raise ExtractionError(f"Error inesperado al extraer texto: {str(e)}")
 
         # Limpiar texto
         text = self._clean_text(text)
 
-        if not text or len(text.strip()) < 50:
+        if not text or len(text.strip()) < 20:
             raise ExtractionError(
-                "El archivo no contiene suficiente texto para generar un resumen. "
-                "Se requieren al menos 50 caracteres de contenido."
+                "El archivo no contiene suficiente texto útil o está corrupto. "
+                "Se requieren al menos ~20 caracteres de contenido."
             )
 
         # Evaluar calidad

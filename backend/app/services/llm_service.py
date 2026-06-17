@@ -58,27 +58,42 @@ class LLMService:
         try:
             # Configurar generación
             generation_config = genai.types.GenerationConfig(
-                temperature=GEMINI_TEMPERATURE,
+                temperature=0.1,  # Fijado a 0.1 según requerimiento
                 max_output_tokens=GEMINI_MAX_OUTPUT_TOKENS,
                 response_mime_type="application/json",
             )
 
-            # Generar respuesta
-            response = self.model.generate_content(
-                [system_prompt, user_prompt],
-                generation_config=generation_config,
-            )
+            max_retries = 1
+            response = None
+            summary_data = None
+            for attempt in range(max_retries + 1):
+                try:
+                    # Generar respuesta
+                    content_parts = [system_prompt, user_prompt] if system_prompt else [user_prompt]
+                    response = self.model.generate_content(
+                        content_parts,
+                        generation_config=generation_config,
+                    )
+
+                    # Parsear JSON de la respuesta
+                    raw_text = response.text
+                    summary_data = self._parse_json_response(raw_text)
+                    
+                    # Manejar error explícito del modelo desde el JSON
+                    if "error" in summary_data and len(summary_data) == 1:
+                        raise LLMError(summary_data["error"])
+                        
+                    break
+                except LLMError:
+                    raise  # No reintentar si es un error explícito
+                except Exception as e:
+                    if attempt < max_retries:
+                        logger.warning(f"Fallo en intento {attempt + 1}: {str(e)}. Reintentando en 2s...")
+                        time.sleep(2)
+                    else:
+                        raise
 
             processing_time = time.time() - start_time
-
-            # Extraer tokens usados
-            usage = response.usage_metadata
-            input_tokens = usage.prompt_token_count if usage else 0
-            output_tokens = usage.candidates_token_count if usage else 0
-
-            # Parsear JSON de la respuesta
-            raw_text = response.text
-            summary_data = self._parse_json_response(raw_text)
 
             # Asegurar que meeting_name esté seteado
             if not summary_data.get("meeting_name"):
@@ -153,31 +168,77 @@ class LLMService:
         )
 
     def _build_summary(self, data: dict) -> MeetingSummary:
-        """Construye un MeetingSummary desde el dict parseado, manejando variaciones."""
-        # Normalizar pending_tasks
+        """Construye un MeetingSummary aplanando el nuevo formato JSON para compatibilidad."""
+        # Si el JSON viene en el formato antiguo, mantener soporte básico
+        if "metadata" not in data and "contenido" not in data:
+            tasks = []
+            for task in data.get("pending_tasks", []):
+                if isinstance(task, str):
+                    tasks.append(TaskItem(task=task))
+                elif isinstance(task, dict):
+                    tasks.append(TaskItem(
+                        task=task.get("task", task.get("description", "")),
+                        responsible=task.get("responsible", task.get("assignee")),
+                        deadline=task.get("deadline", task.get("due_date")),
+                    ))
+            return MeetingSummary(
+                meeting_name=data.get("meeting_name", ""),
+                date_detected=data.get("date_detected"),
+                participants=data.get("participants", []),
+                meeting_objective=data.get("meeting_objective"),
+                topics_discussed=data.get("topics_discussed", []),
+                decisions_made=data.get("decisions_made", []),
+                pending_tasks=tasks,
+                risks_and_blockers=data.get("risks_and_blockers", []),
+                next_steps=data.get("next_steps", []),
+                executive_summary=data.get("executive_summary", ""),
+            )
+
+        # Mapeo del nuevo formato (PROMPT INTERNO definitivo)
+        metadata = data.get("metadata", {})
+        contenido = data.get("contenido", {})
+        
+        # Participantes
+        participants = [p.get("nombre", "") for p in data.get("participantes", []) if isinstance(p, dict)]
+        
+        # Temas discutidos
+        topics = [f"{t.get('tema', '')}: {t.get('resumen', '')}".strip(": ") for t in contenido.get("temas_discutidos", [])]
+        
+        # Decisiones
+        decisions = [d.get("descripcion", "") for d in data.get("decisiones", [])]
+        
+        # Tareas
         tasks = []
-        raw_tasks = data.get("pending_tasks", [])
-        for task in raw_tasks:
-            if isinstance(task, str):
-                tasks.append(TaskItem(task=task))
-            elif isinstance(task, dict):
+        for t in data.get("tareas_pendientes", []):
+            if isinstance(t, dict):
                 tasks.append(TaskItem(
-                    task=task.get("task", task.get("description", "")),
-                    responsible=task.get("responsible", task.get("assignee")),
-                    deadline=task.get("deadline", task.get("due_date")),
+                    task=t.get("descripcion", ""),
+                    responsible=t.get("responsable", "Por asignar"),
+                    deadline=t.get("fecha_vencimiento")
                 ))
+        
+        # Riesgos
+        risks = [r.get("descripcion", "") for r in data.get("riesgos_bloqueos", [])]
+        
+        # Próximos pasos
+        next_steps = []
+        proxima = data.get("proxima_reunion")
+        if proxima and isinstance(proxima, dict) and any(proxima.values()):
+            fecha = proxima.get("fecha_tentativa") or "TBD"
+            tema = proxima.get("tema_tentativo") or "TBD"
+            next_steps.append(f"Próxima reunión: {fecha} - {tema}")
 
         return MeetingSummary(
-            meeting_name=data.get("meeting_name", ""),
-            date_detected=data.get("date_detected"),
-            participants=data.get("participants", []),
-            meeting_objective=data.get("meeting_objective"),
-            topics_discussed=data.get("topics_discussed", []),
-            decisions_made=data.get("decisions_made", []),
+            meeting_name=metadata.get("nombre_reunion") or "",
+            date_detected=metadata.get("fecha"),
+            participants=participants,
+            meeting_objective=contenido.get("objetivo_principal"),
+            topics_discussed=topics,
+            decisions_made=decisions,
             pending_tasks=tasks,
-            risks_and_blockers=data.get("risks_and_blockers", []),
-            next_steps=data.get("next_steps", []),
-            executive_summary=data.get("executive_summary", ""),
+            risks_and_blockers=risks,
+            next_steps=next_steps,
+            executive_summary=contenido.get("resumen_ejecutivo", ""),
         )
 
 

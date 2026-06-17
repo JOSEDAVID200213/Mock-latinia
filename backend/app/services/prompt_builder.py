@@ -1,90 +1,145 @@
 """
-Constructor de prompts adaptativo.
-Selecciona y construye el prompt apropiado según la calidad del texto.
+Constructor de prompts unificado.
+Contiene el prompt definitivo estandarizado para generar resúmenes de reuniones.
 """
 from __future__ import annotations
 
 import logging
-from pathlib import Path
-
-from app.config import PROMPTS_DIR
 
 logger = logging.getLogger(__name__)
 
 
+def build_summary_prompt(texto_extraido: str) -> str:
+    """
+    Inyecta la transcripción extraída en el prompt estándar definitivo del POC.
+    No se debe alterar la estructura de este prompt para mantener la consistencia.
+    """
+    return f"""Eres un asistente especializado en estructurar actas de reuniones
+corporativas a partir de transcripciones o notas.
+
+CONTEXTO:
+Vas a recibir el texto plano de una reunión: puede ser una
+transcripción de audio, notas manuales escritas durante la reunión,
+o una mezcla de ambas. Tu única tarea es leerlo y devolver un objeto
+JSON con la información estructurada, siguiendo exactamente el
+esquema indicado más abajo.
+
+REGLAS DE EXTRACCIÓN (existen para eliminar la ambigüedad — síguelas
+de forma estricta):
+
+1. No inventes información que no esté en el texto. Si un dato no
+   aparece, usa null.
+2. Si una fecha no es exacta (ej. "el próximo lunes", "en dos
+   semanas"), déjala en null. No calcules ni asumas fechas absolutas.
+3. Toda tarea en "tareas_pendientes" debe tener un valor en
+   "responsable": si no hay un nombre claro en el texto, escribe
+   "Por asignar" (nunca lo dejes vacío o null).
+4. Si encuentras información contradictoria, prioriza la mención
+   más reciente dentro del texto.
+5. Ignora muletillas y ruido típico de transcripción (ehh, este, o
+   sea, risas, silencios marcados, repeticiones por corte de audio).
+6. Detecta el idioma predominante del texto y repórtalo en
+   "idioma_detectado" (ej. "es", "en", "pt").
+7. Evalúa la calidad de la transcripción como "alta", "media" o
+   "baja" según qué tan legible y coherente sea el texto recibido.
+8. Si el texto tiene patrones de transcripción de audio (un nombre
+   seguido de dos puntos, marcas de tiempo tipo [00:15:30]), apóyate
+   en esos patrones para identificar participantes y estimar
+   duración.
+9. Si el texto tiene patrones de notas sueltas (viñetas, encabezados
+   con #, palabras como "TODO:", "Acción:", "Decisión:"), tómalas
+   como pista directa para llenar "tareas_pendientes" y "decisiones".
+10. Para "categoria_sugerida", elige la opción que mejor describa el
+    propósito general de la reunión según el contenido: "Reunión de
+    seguimiento", "Actualización de proyecto", "Decisión estratégica",
+    "Reunión general", u "Otro" si ninguna aplica bien.
+
+ESQUEMA DE SALIDA (JSON estricto, sin texto adicional):
+
+{{
+  "metadata": {{
+    "nombre_reunion": string | null,
+    "categoria_sugerida": string | null,
+    "fecha": "YYYY-MM-DD" | null,
+    "hora_inicio": "HH:MM" | null,
+    "duracion_minutos": integer | null,
+    "idioma_detectado": string,
+    "calidad_transcripcion": "alta" | "media" | "baja"
+  }},
+  "participantes": [
+    {{ "nombre": string, "rol": "Organizador" | "Participante" | "Observador" | null }}
+  ],
+  "contenido": {{
+    "objetivo_principal": string | null,
+    "resumen_ejecutivo": string,
+    "temas_discutidos": [
+      {{ "tema": string, "resumen": string }}
+    ]
+  }},
+  "decisiones": [
+    {{ "descripcion": string, "tomada_por": string | null, "fecha_efectiva": "YYYY-MM-DD" | null }}
+  ],
+  "tareas_pendientes": [
+    {{ "descripcion": string, "responsable": string, "fecha_vencimiento": "YYYY-MM-DD" | null, "prioridad": "Alta" | "Media" | "Baja" | null }}
+  ],
+  "riesgos_bloqueos": [
+    {{ "descripcion": string, "impacto": "Alto" | "Medio" | "Bajo" | null }}
+  ],
+  "proxima_reunion": {{
+    "fecha_tentativa": "YYYY-MM-DD" | null,
+    "tema_tentativo": string | null
+  }},
+  "notas_adicionales": string | null
+}}
+
+NOTA SOBRE "resumen_ejecutivo": máximo 400 caracteres, 2 a 4 frases
+con lo más importante de la reunión. Es un POC, no hace falta más.
+
+FORMATO DE RESPUESTA:
+Devuelve ÚNICAMENTE el objeto JSON. Sin explicaciones, sin texto
+antes o después, sin envolverlo entre comillas de bloque de código.
+Si el texto recibido está vacío, es ilegible, o claramente no
+corresponde a una reunión, devuelve exactamente:
+{{"error": "breve descripción del problema"}}
+
+TEXTO A ANALIZAR:
+\"\"\"
+{texto_extraido}
+\"\"\"
+"""
+
+
 class PromptBuilder:
     """
-    Construye prompts adaptativos basados en la calidad del texto extraído.
-    Calidad alta (>= 0.7) → prompt limpio (menos tokens)
-    Calidad baja (< 0.7) → prompt con instrucciones de limpieza (más tokens)
+    Fachada para mantener compatibilidad con las llamadas actuales en el POC.
+    Ignora la calidad y formato para usar siempre el prompt estandarizado.
     """
-
-    QUALITY_THRESHOLD = 0.7
-
-    def __init__(self):
-        self._cache: dict[str, str] = {}
-
-    def _load_template(self, filename: str) -> str:
-        """Carga un template de prompt desde disco con caché."""
-        if filename not in self._cache:
-            path = PROMPTS_DIR / filename
-            if not path.exists():
-                raise FileNotFoundError(f"Template de prompt no encontrado: {path}")
-            self._cache[filename] = path.read_text(encoding="utf-8")
-        return self._cache[filename]
 
     def build(
         self,
         transcript_text: str,
-        quality_score: float,
-        format_type: str = "desconocido",
+        quality_score: float = 0.0,
+        format_type: str = "",
         meeting_name: str = "",
     ) -> tuple[str, str, str]:
         """
-        Construye el prompt completo adaptado a la calidad del texto.
-
-        Args:
-            transcript_text: Texto extraído de la transcripción
-            quality_score: Score de calidad (0-1)
-            format_type: Formato del archivo original
-            meeting_name: Nombre de la reunión
-
+        Devuelve el prompt unificado.
+        
         Returns:
             Tuple de (system_prompt, user_prompt, template_name)
         """
-        # Cargar prompt base del sistema
-        system_prompt = self._load_template("base_system.txt")
+        # Como el prompt es uno solo que combina contexto de sistema e instrucción,
+        # dejamos system_prompt vacío y enviamos todo en el user_prompt.
+        system_prompt = ""
+        user_prompt = build_summary_prompt(transcript_text)
+        
+        logger.info("Prompt estandarizado construido.")
+        
+        return system_prompt, user_prompt, "unified_standard"
 
-        # Seleccionar template según calidad
-        if quality_score >= self.QUALITY_THRESHOLD:
-            template_name = "extraction_clean"
-            user_template = self._load_template("extraction_clean.txt")
-            user_prompt = user_template + transcript_text
-        else:
-            template_name = "extraction_noisy"
-            user_template = self._load_template("extraction_noisy.txt")
-            # Inyectar tipo de formato en las instrucciones
-            user_template = user_template.replace("{format_type}", format_type)
-            user_prompt = user_template + transcript_text
-
-        logger.info(
-            f"Prompt construido: template={template_name}, "
-            f"quality={quality_score:.2f}, format={format_type}"
-        )
-
-        return system_prompt, user_prompt, template_name
-
-    def estimate_prompt_tokens(self, quality_score: float) -> int:
-        """
-        Estima los tokens del prompt (sin contar la transcripción).
-        Útil para el pre-cálculo de costos.
-        """
-        if quality_score >= self.QUALITY_THRESHOLD:
-            # Prompt limpio: ~800 tokens
-            return 800
-        else:
-            # Prompt con instrucciones extra: ~1200 tokens
-            return 1200
+    def estimate_prompt_tokens(self, quality_score: float = 0.0) -> int:
+        """Estima los tokens del nuevo prompt unificado."""
+        return 1000  # Estimación fija para el prompt estándar
 
 
 # Instancia singleton
