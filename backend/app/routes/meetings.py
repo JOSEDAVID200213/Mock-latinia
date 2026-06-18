@@ -91,8 +91,8 @@ async def upload_and_analyze(
 
         # --- Guardar en storage ---
         storage = get_storage_service()
-        storage.save_original_file(meeting_id, tmp_path, extension)
-        storage.save_text(meeting_id, "extracted_text.txt", extraction.text)
+        storage.save_original_file(meeting_id, tmp_path, extension, meeting_name=meeting_name.strip())
+        storage.save_text(meeting_id, "extracted_text.txt", extraction.text, meeting_name=meeting_name.strip())
 
         # Crear y guardar metadata inicial
         file_info = SourceFileInfo(
@@ -116,7 +116,7 @@ async def upload_and_analyze(
             ),
         )
 
-        storage.save_json(meeting_id, "metadata.json", record.model_dump())
+        storage.save_json(meeting_id, "metadata.json", record.model_dump(), meeting_name=meeting_name.strip())
 
         # Guardar datos de sesión para la fase 2
         _session_data[meeting_id] = {
@@ -202,6 +202,7 @@ async def process_meeting(meeting_id: str):
         # Generar resumen con LLM
         llm = get_llm_service()
         summary, processing_meta = llm.generate_summary(
+            meeting_id=meeting_id,
             system_prompt=system_prompt,
             user_prompt=user_prompt,
             template_name=template_name,
@@ -209,11 +210,7 @@ async def process_meeting(meeting_id: str):
         )
 
         # Guardar resumen
-        storage.save_json(meeting_id, "summary.json", summary.model_dump())
-
-        # Generar y guardar HTML del resumen
-        summary_html = _generate_summary_html(summary)
-        storage.save_text(meeting_id, "summary.html", summary_html)
+        storage.save_json(meeting_id, "summary.json", summary.model_dump(), meeting_name=session["meeting_name"])
 
         # Actualizar metadata final
         cost = cost_estimator.estimate(
@@ -226,7 +223,7 @@ async def process_meeting(meeting_id: str):
             record.status = ProcessingStatus.COMPLETED
             record.processing = processing_meta
             record.summary = summary
-            storage.save_json(meeting_id, "metadata.json", record.model_dump())
+            storage.save_json(meeting_id, "metadata.json", record.model_dump(), meeting_name=session["meeting_name"])
 
         # Limpiar datos de sesión
         _session_data.pop(meeting_id, None)

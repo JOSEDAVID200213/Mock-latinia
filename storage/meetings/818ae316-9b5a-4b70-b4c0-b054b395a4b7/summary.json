@@ -1,0 +1,25 @@
+{
+  "meeting_name": "Reunión de concejo de Long Beach (Prueba)",
+  "date_detected": "2026-06-17",
+  "participants": [
+    "Mayor",
+    "Councilmember"
+  ],
+  "meeting_objective": "Discutir resoluciones de la ciudad",
+  "topics_discussed": [
+    "Presupuesto: Aprobación de enmiendas presupuestarias"
+  ],
+  "decisions_made": [
+    "Aprobación de la resolución 22-0511"
+  ],
+  "pending_tasks": [
+    {
+      "task": "Publicar enmiendas en el sitio web de la ciudad",
+      "responsible": "City Clerk",
+      "deadline": "2026-06-20"
+    }
+  ],
+  "risks_and_blockers": [],
+  "next_steps": [],
+  "executive_summary": "Se discutieron varios puntos del concejo incluyendo presupuestos y permisos de zonificación."
+}

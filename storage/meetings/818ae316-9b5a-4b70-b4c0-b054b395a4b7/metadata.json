@@ -1,0 +1,54 @@
+{
+  "meeting_id": "818ae316-9b5a-4b70-b4c0-b054b395a4b7",
+  "meeting_name": "Test MeetingBank",
+  "created_at": "2026-06-17T14:00:18.925940",
+  "status": "completed",
+  "source_file": {
+    "original_name": "LongBeachCC_04052022_22-0370_transcript.txt",
+    "format": "txt",
+    "size_bytes": 951,
+    "mime_type": "text/plain"
+  },
+  "extraction": {
+    "method": "direct_read",
+    "quality_score": 1.0,
+    "char_count": 943,
+    "word_count": 177,
+    "warnings": []
+  },
+  "processing": {
+    "model": "gemini-2.0-flash",
+    "prompt_template": "unified_standard",
+    "input_tokens": 1000,
+    "output_tokens": 1500,
+    "total_tokens": 2500,
+    "estimated_cost_usd": 0.0007,
+    "processing_time_seconds": 0.0,
+    "is_free_tier": true
+  },
+  "summary": {
+    "meeting_name": "Reunión de concejo de Long Beach (Prueba)",
+    "date_detected": "2026-06-17",
+    "participants": [
+      "Mayor",
+      "Councilmember"
+    ],
+    "meeting_objective": "Discutir resoluciones de la ciudad",
+    "topics_discussed": [
+      "Presupuesto: Aprobación de enmiendas presupuestarias"
+    ],
+    "decisions_made": [
+      "Aprobación de la resolución 22-0511"
+    ],
+    "pending_tasks": [
+      {
+        "task": "Publicar enmiendas en el sitio web de la ciudad",
+        "responsible": "City Clerk",
+        "deadline": "2026-06-20"
+      }
+    ],
+    "risks_and_blockers": [],
+    "next_steps": [],
+    "executive_summary": "Se discutieron varios puntos del concejo incluyendo presupuestos y permisos de zonificación."
+  }
+}

@@ -1,0 +1,39 @@
+CÓMO INICIAR EL PROYECTO (BACKEND Y FRONTEND)
+=============================================
+
+1. CONFIGURAR LA API KEY DE GEMINI
+----------------------------------
+Asegúrate de que en el archivo "backend/.env" esté configurada tu clave de API:
+GEMINI_API_KEY="TU_API_KEY_AQUÍ"
+
+
+2. INICIAR EL BACKEND (FastAPI)
+-------------------------------
+Abre una terminal en la raíz del proyecto y ejecuta:
+
+# 1. Activar el entorno virtual (PowerShell)
+.\venv\Scripts\Activate.ps1
+
+# O si usas el Command Prompt (CMD) clásico:
+# .\venv\Scripts\activate.bat
+
+# 2. Ir al directorio backend
+cd backend
+
+# 3. Iniciar el servidor
+uvicorn app.main:app --reload
+
+El backend estará disponible en: http://127.0.0.1:8000
+
+
+3. INICIAR EL FRONTEND (React + Vite)
+-------------------------------------
+Abre otra terminal diferente en la raíz del proyecto y ejecuta:
+
+# 1. Ir al directorio frontend
+cd frontend
+
+# 2. Iniciar el servidor de desarrollo
+npm run dev
+
+El frontend estará disponible en: http://localhost:5173

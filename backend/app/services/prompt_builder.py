@@ -18,89 +18,50 @@ def build_summary_prompt(texto_extraido: str) -> str:
 corporativas a partir de transcripciones o notas.
 
 CONTEXTO:
-Vas a recibir el texto plano de una reunión: puede ser una
-transcripción de audio, notas manuales escritas durante la reunión,
-o una mezcla de ambas. Tu única tarea es leerlo y devolver un objeto
-JSON con la información estructurada, siguiendo exactamente el
-esquema indicado más abajo.
+Vas a recibir el texto plano de una reunión (transcripción de audio, notas manuales o mezcla). Tu única tarea es leerlo y redactar un resumen ejecutivo y acta estructurada, profesional, limpia y fácil de leer.
 
-REGLAS DE EXTRACCIÓN (existen para eliminar la ambigüedad — síguelas
-de forma estricta):
+ESTRUCTURA DEL DOCUMENTO:
+Tu respuesta debe estar redactada en español y usar la siguiente estructura de títulos y viñetas (texto plano, SIN FORMATO MARKDOWN, sin usar asteriscos, numerales ni negritas):
 
-1. No inventes información que no esté en el texto. Si un dato no
-   aparece, usa null.
-2. Si una fecha no es exacta (ej. "el próximo lunes", "en dos
-   semanas"), déjala en null. No calcules ni asumas fechas absolutas.
-3. Toda tarea en "tareas_pendientes" debe tener un valor en
-   "responsable": si no hay un nombre claro en el texto, escribe
-   "Por asignar" (nunca lo dejes vacío o null).
-4. Si encuentras información contradictoria, prioriza la mención
-   más reciente dentro del texto.
-5. Ignora muletillas y ruido típico de transcripción (ehh, este, o
-   sea, risas, silencios marcados, repeticiones por corte de audio).
-6. Detecta el idioma predominante del texto y repórtalo en
-   "idioma_detectado" (ej. "es", "en", "pt").
-7. Evalúa la calidad de la transcripción como "alta", "media" o
-   "baja" según qué tan legible y coherente sea el texto recibido.
-8. Si el texto tiene patrones de transcripción de audio (un nombre
-   seguido de dos puntos, marcas de tiempo tipo [00:15:30]), apóyate
-   en esos patrones para identificar participantes y estimar
-   duración.
-9. Si el texto tiene patrones de notas sueltas (viñetas, encabezados
-   con #, palabras como "TODO:", "Acción:", "Decisión:"), tómalas
-   como pista directa para llenar "tareas_pendientes" y "decisiones".
-10. Para "categoria_sugerida", elige la opción que mejor describa el
-    propósito general de la reunión según el contenido: "Reunión de
-    seguimiento", "Actualización de proyecto", "Decisión estratégica",
-    "Reunión general", u "Otro" si ninguna aplica bien.
+Resumen de reunión: [Nombre de la reunión o Tema principal si no se especifica]
 
-ESQUEMA DE SALIDA (JSON estricto, sin texto adicional):
+Metadata de la Reunión
+- Fecha: [Fecha de la reunión si se menciona, o "No especificada"]
+- Duración estimada: [Duración en minutos si se menciona, o "No especificada"]
+- Participantes: [Nombres de los participantes detectados separados por comas, o "No especificados"]
 
-{{
-  "metadata": {{
-    "nombre_reunion": string | null,
-    "categoria_sugerida": string | null,
-    "fecha": "YYYY-MM-DD" | null,
-    "hora_inicio": "HH:MM" | null,
-    "duracion_minutos": integer | null,
-    "idioma_detectado": string,
-    "calidad_transcripcion": "alta" | "media" | "baja"
-  }},
-  "participantes": [
-    {{ "nombre": string, "rol": "Organizador" | "Participante" | "Observador" | null }}
-  ],
-  "contenido": {{
-    "objetivo_principal": string | null,
-    "resumen_ejecutivo": string,
-    "temas_discutidos": [
-      {{ "tema": string, "resumen": string }}
-    ]
-  }},
-  "decisiones": [
-    {{ "descripcion": string, "tomada_por": string | null, "fecha_efectiva": "YYYY-MM-DD" | null }}
-  ],
-  "tareas_pendientes": [
-    {{ "descripcion": string, "responsable": string, "fecha_vencimiento": "YYYY-MM-DD" | null, "prioridad": "Alta" | "Media" | "Baja" | null }}
-  ],
-  "riesgos_bloqueos": [
-    {{ "descripcion": string, "impacto": "Alto" | "Medio" | "Bajo" | null }}
-  ],
-  "proxima_reunion": {{
-    "fecha_tentativa": "YYYY-MM-DD" | null,
-    "tema_tentativo": string | null
-  }},
-  "notas_adicionales": string | null
-}}
+1. Objetivo Principal
+[Una breve descripción del objetivo o propósito general de la reunión]
 
-NOTA SOBRE "resumen_ejecutivo": máximo 400 caracteres, 2 a 4 frases
-con lo más importante de la reunión. Es un POC, no hace falta más.
+2. Resumen Ejecutivo
+[Un resumen ejecutivo de máximo 4 frases con lo más importante conversado y acordado]
 
-FORMATO DE RESPUESTA:
-Devuelve ÚNICAMENTE el objeto JSON. Sin explicaciones, sin texto
-antes o después, sin envolverlo entre comillas de bloque de código.
-Si el texto recibido está vacío, es ilegible, o claramente no
-corresponde a una reunión, devuelve exactamente:
-{{"error": "breve descripción del problema"}}
+3. Temas Discutidos
+- [Tema 1]: [Resumen corto de lo discutido en este tema]
+- [Tema 2]: [Resumen corto de lo discutido en este tema]
+...
+
+4. Decisiones Tomadas
+- [Decisión 1 y quién la tomó si se menciona]
+- [Decisión 2]
+...
+
+5. Tareas Pendientes
+- [Descripción de la tarea]: Responsable: [Nombre del responsable o "Por asignar"] | Fecha límite: [Fecha de vencimiento o "Por definir"]
+...
+
+6. Riesgos y Bloqueos
+- [Riesgo/bloqueo identificado y su impacto si se menciona]
+...
+
+7. Próximos Pasos / Próxima Reunión
+- [Próxima fecha o temas tentativos para continuar]
+
+REGLAS DE ORO:
+- No inventes información que no esté en el texto.
+- Sé extremadamente conciso y directo al punto.
+- Usa lenguaje formal y profesional.
+- No incluyas explicaciones previas ni posteriores, devuelve directamente el documento en formato texto plano y limpio (SIN markdown como #, **, _ o similares).
 
 TEXTO A ANALIZAR:
 \"\"\"

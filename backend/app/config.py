@@ -27,6 +27,9 @@ STORAGE_BACKEND = os.getenv("STORAGE_BACKEND", "local")  # "local" | "gdrive"
 GDRIVE_CREDENTIALS_PATH = os.getenv("GDRIVE_CREDENTIALS_PATH", "")
 GDRIVE_FOLDER_ID = os.getenv("GDRIVE_FOLDER_ID", "")
 
+# Google Drive / Apps Script
+APPS_SCRIPT_URL = os.getenv("APPS_SCRIPT_URL", "")
+
 # --- Archivos ---
 MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", "25"))
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024

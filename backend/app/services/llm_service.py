@@ -13,6 +13,7 @@ import google.generativeai as genai
 
 from app.config import GEMINI_API_KEY, GEMINI_MAX_OUTPUT_TOKENS, GEMINI_MODEL, GEMINI_TEMPERATURE
 from app.models.schemas import MeetingSummary, ProcessingMetadata, TaskItem
+from app.services.storage_service import get_storage_service
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +37,7 @@ class LLMService:
 
     def generate_summary(
         self,
+        meeting_id: str,
         system_prompt: str,
         user_prompt: str,
         template_name: str,
@@ -45,6 +47,7 @@ class LLMService:
         Genera un resumen estructurado usando Gemini.
 
         Args:
+            meeting_id: ID único de la reunión
             system_prompt: Instrucciones del sistema
             user_prompt: Prompt con la transcripción
             template_name: Nombre del template usado
@@ -60,12 +63,11 @@ class LLMService:
             generation_config = genai.types.GenerationConfig(
                 temperature=0.1,  # Fijado a 0.1 según requerimiento
                 max_output_tokens=GEMINI_MAX_OUTPUT_TOKENS,
-                response_mime_type="application/json",
+                response_mime_type="text/plain",
             )
 
             max_retries = 1
             response = None
-            summary_data = None
             for attempt in range(max_retries + 1):
                 try:
                     # Generar respuesta
@@ -75,15 +77,39 @@ class LLMService:
                         generation_config=generation_config,
                     )
 
-                    # Parsear JSON de la respuesta
+                    # Tomar la respuesta como texto plano y limpiar posible markdown residual
                     raw_text = response.text
-                    summary_data = self._parse_json_response(raw_text)
+                    import re
+                    raw_text = re.sub(r'[*_]{1,2}', '', raw_text)  # Quitar asteriscos o guiones bajos
+                    raw_text = re.sub(r'^#+\s+', '', raw_text, flags=re.MULTILINE)  # Quitar almohadillas de títulos
                     
-                    # Manejar error explícito del modelo desde el JSON
-                    if "error" in summary_data and len(summary_data) == 1:
-                        raise LLMError(summary_data["error"])
-                        
-                    break
+                    storage = get_storage_service()
+                    doc_url = storage.save_google_doc(meeting_id, f"{meeting_name}_resumen", raw_text, meeting_name=meeting_name)
+                    logger.info(f"Respuesta guardada como Google Doc: {doc_url}")
+                    # Construir un resumen mínimo usando el texto bruto
+                    summary = MeetingSummary(
+                        meeting_name=meeting_name,
+                        executive_summary=raw_text,
+                        doc_url=doc_url,
+                    )
+                    # Construir metadata de procesamiento como antes
+                    processing_time = time.time() - start_time
+                    input_tokens = getattr(response.usage_metadata, "prompt_token_count", 0) if response and hasattr(response, "usage_metadata") else 0
+                    output_tokens = getattr(response.usage_metadata, "candidates_token_count", 0) if response and hasattr(response, "usage_metadata") else 0
+                    from app.config import COST_PER_1M_INPUT_TOKENS, COST_PER_1M_OUTPUT_TOKENS
+                    actual_cost = ((input_tokens / 1_000_000) * COST_PER_1M_INPUT_TOKENS + (output_tokens / 1_000_000) * COST_PER_1M_OUTPUT_TOKENS)
+                    metadata = ProcessingMetadata(
+                        model=GEMINI_MODEL,
+                        prompt_template=template_name,
+                        input_tokens=input_tokens,
+                        output_tokens=output_tokens,
+                        total_tokens=input_tokens + output_tokens,
+                        estimated_cost_usd=round(actual_cost, 6),
+                        processing_time_seconds=round(processing_time, 2),
+                        is_free_tier=True,
+                    )
+                    logger.info(f"Resumen generado y guardado en Google Doc: {doc_url}")
+                    return summary, metadata
                 except LLMError:
                     raise  # No reintentar si es un error explícito
                 except Exception as e:
@@ -93,40 +119,7 @@ class LLMService:
                     else:
                         raise
 
-            processing_time = time.time() - start_time
 
-            # Asegurar que meeting_name esté seteado
-            if not summary_data.get("meeting_name"):
-                summary_data["meeting_name"] = meeting_name
-
-            # Construir MeetingSummary
-            summary = self._build_summary(summary_data)
-
-            # Construir metadata
-            from app.config import COST_PER_1M_INPUT_TOKENS, COST_PER_1M_OUTPUT_TOKENS
-
-            actual_cost = (
-                (input_tokens / 1_000_000) * COST_PER_1M_INPUT_TOKENS
-                + (output_tokens / 1_000_000) * COST_PER_1M_OUTPUT_TOKENS
-            )
-
-            metadata = ProcessingMetadata(
-                model=GEMINI_MODEL,
-                prompt_template=template_name,
-                input_tokens=input_tokens,
-                output_tokens=output_tokens,
-                total_tokens=input_tokens + output_tokens,
-                estimated_cost_usd=round(actual_cost, 6),
-                processing_time_seconds=round(processing_time, 2),
-                is_free_tier=True,
-            )
-
-            logger.info(
-                f"Resumen generado: {input_tokens} input + {output_tokens} output tokens, "
-                f"{processing_time:.1f}s, ${actual_cost:.6f}"
-            )
-
-            return summary, metadata
 
         except Exception as e:
             processing_time = time.time() - start_time
@@ -136,17 +129,17 @@ class LLMService:
     def _parse_json_response(self, raw_text: str) -> dict:
         """
         Parsea la respuesta JSON del LLM.
-        Maneja casos donde el LLM envuelve el JSON en markdown.
+        Intenta parsear directamente, luego bloques markdown y finalmente raw_decode.
         """
         text = raw_text.strip()
 
-        # Intentar parsear directamente
+        # 1. Intentar parsear directamente
         try:
             return json.loads(text)
         except json.JSONDecodeError:
             pass
 
-        # Intentar extraer JSON de bloques de código markdown
+        # 2. Intentar extraer JSON de bloques de código markdown
         json_match = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', text, re.DOTALL)
         if json_match:
             try:
@@ -154,11 +147,11 @@ class LLMService:
             except json.JSONDecodeError:
                 pass
 
-        # Intentar encontrar el primer { ... } válido
-        brace_match = re.search(r'\{.*\}', text, re.DOTALL)
-        if brace_match:
+        # 3. Intentar encontrar el primer { ... } y usar raw_decode para ignorar texto extra
+        brace_start = text.find('{')
+        if brace_start != -1:
             try:
-                return json.loads(brace_match.group(0))
+                return json.JSONDecoder().raw_decode(text[brace_start:])[0]
             except json.JSONDecodeError:
                 pass
 
@@ -240,6 +233,47 @@ class LLMService:
             next_steps=next_steps,
             executive_summary=contenido.get("resumen_ejecutivo", ""),
         )
+
+    def _render_summary_text(self, summary: MeetingSummary) -> str:
+        """Renderiza el MeetingSummary como texto estructurado para Google Docs.
+        Usa encabezados simples y listas para lograr una presentación legible.
+        """
+        lines = []
+        lines.append(f"Resumen de reunión: {summary.meeting_name}\n")
+        if summary.date_detected:
+            lines.append(f"Fecha: {summary.date_detected}\n")
+        if summary.participants:
+            lines.append("Participantes: " + ", ".join(summary.participants) + "\n")
+        if summary.meeting_objective:
+            lines.append("\nObjetivo principal:\n" + summary.meeting_objective + "\n")
+        if summary.topics_discussed:
+            lines.append("\nTemas discutidos:")
+            for t in summary.topics_discussed:
+                lines.append(f"- {t}")
+        if summary.decisions_made:
+            lines.append("\nDecisiones tomadas:")
+            for d in summary.decisions_made:
+                lines.append(f"- {d}")
+        if summary.pending_tasks:
+            lines.append("\nTareas pendientes:")
+            for t in summary.pending_tasks:
+                line = f"- {t.task}"
+                if t.responsible:
+                    line += f" (Responsable: {t.responsible})"
+                if t.deadline:
+                    line += f" (Fecha límite: {t.deadline})"
+                lines.append(line)
+        if summary.risks_and_blockers:
+            lines.append("\nRiesgos y bloqueos:")
+            for r in summary.risks_and_blockers:
+                lines.append(f"- {r}")
+        if summary.next_steps:
+            lines.append("\nPróximos pasos:")
+            for s in summary.next_steps:
+                lines.append(f"- {s}")
+        if summary.executive_summary:
+            lines.append("\nResumen ejecutivo:\n" + summary.executive_summary)
+        return "\n".join(lines)
 
 
 # Instancia singleton (lazy init)

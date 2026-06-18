@@ -80,6 +80,7 @@ class MeetingSummary(BaseModel):
     risks_and_blockers: list[str] = []
     next_steps: list[str] = []
     executive_summary: str = ""
+    doc_url: Optional[str] = None
 
 
 # --- Metadata de procesamiento ---

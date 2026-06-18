@@ -1,0 +1,8 @@
+
+    [10:00:00] María: Buenos días, vamos a revisar el Q3.
+    [10:01:00] Juan: Los ingresos subieron 10%.
+    [10:02:00] María: Excelente. Juan, ¿puedes enviar el reporte final el viernes?
+    [10:02:30] Juan: Sí, lo tengo listo.
+    [10:03:00] Ana: También necesitamos decidir si contratamos a alguien más para ventas.
+    [10:04:00] María: Decidido, abriremos la vacante mañana.
+    
