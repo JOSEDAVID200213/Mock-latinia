@@ -139,15 +139,32 @@ class LocalStorage(StorageBackend):
         if APPS_SCRIPT_URL:
             import requests
             try:
+                # Intentar cargar la transcripción original si existe
+                transcript = self.load_text(meeting_id, "extracted_text.txt")
+            except Exception:
+                transcript = "No se pudo cargar la transcripción original."
+
+            try:
+                # Enviar payload completo al Apps Script
+                payload = {
+                    "folderName": meeting_name or meeting_id,
+                    "transcript": transcript,
+                    "summary": content
+                }
+                
                 response = requests.post(
                     APPS_SCRIPT_URL,
-                    json={"title": title, "content": content},
-                    timeout=30
+                    json=payload,
+                    timeout=45  # Aumentamos el timeout ya que ahora crea una carpeta y dos documentos
                 )
                 response.raise_for_status()
                 data = response.json()
-                if "url" in data:
-                    logger.info("Google Doc creado via Apps Script: %s", data["url"])
+                
+                if data.get("status") == "success":
+                    logger.info("Carpeta y Google Docs creados via Apps Script: %s", data.get("folderUrl"))
+                    # Devolvemos el URL del acta/resumen para que el frontend lo abra
+                    return data.get("summaryDocUrl", data.get("folderUrl", ""))
+                elif "url" in data:
                     return data["url"]
             except Exception as e:
                 logger.error("Error llamando a Apps Script: %s", e)
