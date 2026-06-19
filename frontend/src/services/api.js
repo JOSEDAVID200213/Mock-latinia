@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api/meetings';
+const API_BASE_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/meetings` : '/api/meetings';
 
 export const api = {
   /**
