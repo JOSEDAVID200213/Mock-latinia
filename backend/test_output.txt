@@ -1,0 +1,63 @@
+📋 REVISIÓN DE AVANCE: LANZAMIENTO NUEVA PLATAFORMA
+==================================================
+
+🗓️ Información General
+----------------------
+
+  Fecha: No especificada
+  Hora de inicio: No especificada
+  Modalidad: Virtual (inferido)
+  Idioma(s) de la reunión: Español
+  Tipo de reunión: Revisión de Proyecto
+
+👥 Participantes
+---------------
+
+  [1]
+      Nombre: Juan
+      Rol / Cargo: No especificado
+      Empresa / Área: No especificado
+      Observaciones: Se unió tarde
+
+  [2]
+      Nombre: Participante no identificado 1
+      Rol / Cargo: Facilitador / Líder de Proyecto
+      Empresa / Área: No especificado
+      Observaciones: Lideró la reunión
+
+  [3]
+      Nombre: Participante no identificado 2
+      Rol / Cargo: Desarrollo / QA
+      Empresa / Área: No especificado
+      Observaciones: Reportó sobre módulo de registro
+
+Total de participantes identificados: 3
+
+📝 Tareas y Compromisos
+----------------------
+
+  [1]
+      #: 1
+      Tarea: Corregir validación de correos
+      Responsable: Participante 2 (Desarrollo)
+      Fecha Límite: Hoy
+      Prioridad: Alta
+      Estado: Pendiente
+
+  [2]
+      #: 2
+      Tarea: Arrancar pruebas internas
+      Responsable: Participante 2 (QA)
+      Fecha Límite: Mañana
+      Prioridad: Alta
+      Estado: Pendiente
+
+📝 Resumen Ejecutivo
+-------------------
+
+La reunión reveló avances y desafíos críticos. El módulo de registro está casi listo.
+
+  "Solo incluir si hay frases relevantes"
+
+  • Decisión 1: Se acordó corregir validación de correos
+  • Decisión 2: Infraestructura reportará antes del jueves

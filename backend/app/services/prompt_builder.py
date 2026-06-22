@@ -1,79 +1,41 @@
 """
-Constructor de prompts unificado.
-Contiene el prompt definitivo estandarizado para generar resúmenes de reuniones.
+Constructor de prompts.
+Lee los templates desde los archivos .txt en app/prompts/.
+Elige entre extraction_clean y extraction_noisy según la calidad del documento.
 """
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+# Directorio donde viven los archivos de prompts
+PROMPTS_DIR = Path(__file__).resolve().parent.parent / "prompts"
 
-def build_summary_prompt(texto_extraido: str) -> str:
-    """
-    Inyecta la transcripción extraída en el prompt estándar definitivo del POC.
-    No se debe alterar la estructura de este prompt para mantener la consistencia.
-    """
-    return f"""Eres un asistente especializado en estructurar actas de reuniones
-corporativas a partir de transcripciones o notas.
+# Umbral de calidad: por debajo de este valor se usa el template "noisy"
+NOISY_QUALITY_THRESHOLD = 0.6
 
-CONTEXTO:
-Vas a recibir el texto plano de una reunión (transcripción de audio, notas manuales o mezcla). Tu única tarea es leerlo y redactar un resumen ejecutivo y acta estructurada, profesional, limpia y fácil de leer.
 
-ESTRUCTURA DEL DOCUMENTO:
-Tu respuesta debe estar redactada en español y usar la siguiente estructura de títulos y viñetas (texto plano, SIN FORMATO MARKDOWN, sin usar asteriscos, numerales ni negritas):
-
-Resumen de reunión: [Nombre de la reunión o Tema principal si no se especifica]
-
-Metadata de la Reunión
-- Fecha: [Fecha de la reunión si se menciona, o "No especificada"]
-- Duración estimada: [Duración en minutos si se menciona, o "No especificada"]
-- Participantes: [Nombres de los participantes detectados separados por comas, o "No especificados"]
-
-1. Objetivo Principal
-[Una breve descripción del objetivo o propósito general de la reunión]
-
-2. Resumen Ejecutivo
-[Un resumen ejecutivo de máximo 4 frases con lo más importante conversado y acordado]
-
-3. Temas Discutidos
-- [Tema 1]: [Resumen corto de lo discutido en este tema]
-- [Tema 2]: [Resumen corto de lo discutido en este tema]
-...
-
-4. Decisiones Tomadas
-- [Decisión 1 y quién la tomó si se menciona]
-- [Decisión 2]
-...
-
-5. Tareas Pendientes
-- [Descripción de la tarea]: Responsable: [Nombre del responsable o "Por asignar"] | Fecha límite: [Fecha de vencimiento o "Por definir"]
-...
-
-6. Riesgos y Bloqueos
-- [Riesgo/bloqueo identificado y su impacto si se menciona]
-...
-
-7. Próximos Pasos / Próxima Reunión
-- [Próxima fecha o temas tentativos para continuar]
-
-REGLAS DE ORO:
-- No inventes información que no esté en el texto.
-- Sé extremadamente conciso y directo al punto.
-- Usa lenguaje formal y profesional.
-- No incluyas explicaciones previas ni posteriores, devuelve directamente el documento en formato texto plano y limpio (SIN markdown como #, **, _ o similares).
-
-TEXTO A ANALIZAR:
-\"\"\"
-{texto_extraido}
-\"\"\"
-"""
+def _load_prompt(filename: str) -> str:
+    """Lee un archivo de prompt del disco."""
+    path = PROMPTS_DIR / filename
+    try:
+        return path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        logger.error(f"Archivo de prompt no encontrado: {path}")
+        raise
 
 
 class PromptBuilder:
     """
-    Fachada para mantener compatibilidad con las llamadas actuales en el POC.
-    Ignora la calidad y formato para usar siempre el prompt estandarizado.
+    Construye el prompt final combinando:
+    - base_system.txt  → system prompt (rol e instrucciones globales)
+    - extraction_clean.txt   → template para documentos limpios (quality >= 0.6)
+    - extraction_noisy.txt   → template para documentos con ruido (quality < 0.6)
+
+    El template elegido ya incluye la instrucción al final 'TRANSCRIPCIÓN:'
+    a la que se le concatena el texto extraído.
     """
 
     def build(
@@ -84,23 +46,50 @@ class PromptBuilder:
         meeting_name: str = "",
     ) -> tuple[str, str, str]:
         """
-        Devuelve el prompt unificado.
-        
+        Construye el par (system_prompt, user_prompt) y el nombre del template usado.
+
         Returns:
             Tuple de (system_prompt, user_prompt, template_name)
         """
-        # Como el prompt es uno solo que combina contexto de sistema e instrucción,
-        # dejamos system_prompt vacío y enviamos todo en el user_prompt.
-        system_prompt = ""
-        user_prompt = build_summary_prompt(transcript_text)
-        
-        logger.info("Prompt estandarizado construido.")
-        
-        return system_prompt, user_prompt, "unified_standard"
+        # Seleccionar template según calidad del documento
+        if quality_score < NOISY_QUALITY_THRESHOLD:
+            template_file = "extraction_noisy.txt"
+        else:
+            template_file = "extraction_clean.txt"
+
+        system_prompt = _load_prompt("base_system.txt")
+        user_template = _load_prompt(template_file)
+
+        # Reemplazar placeholder {format_type} si existe en el template
+        user_template = user_template.replace("{format_type}", format_type or "desconocido")
+
+        # Concatenar la transcripción al final del template
+        user_prompt = user_template + "\n" + transcript_text
+
+        logger.info(
+            f"Prompt construido: template={template_file}, "
+            f"quality={quality_score:.2f}, format={format_type}"
+        )
+
+        return system_prompt, user_prompt, template_file
 
     def estimate_prompt_tokens(self, quality_score: float = 0.0) -> int:
-        """Estima los tokens del nuevo prompt unificado."""
-        return 1000  # Estimación fija para el prompt estándar
+        """
+        Estima los tokens del prompt para el cálculo de costo previo.
+        Se basa en el tamaño aproximado de los archivos de template.
+        """
+        try:
+            system_size = len(_load_prompt("base_system.txt"))
+            template_file = (
+                "extraction_noisy.txt"
+                if quality_score < NOISY_QUALITY_THRESHOLD
+                else "extraction_clean.txt"
+            )
+            template_size = len(_load_prompt(template_file))
+            # Aproximación: 1 token ≈ 4 caracteres
+            return (system_size + template_size) // 4
+        except Exception:
+            return 1200  # Fallback conservador
 
 
 # Instancia singleton
