@@ -20,6 +20,10 @@ class FileFormat(str, Enum):
     DOCX = "docx"
     PDF = "pdf"
     RTF = "rtf"
+    XLSX = "xlsx"
+    PPTX = "pptx"
+    CSV = "csv"
+    HTML = "html"
 
 
 class ProcessingStatus(str, Enum):

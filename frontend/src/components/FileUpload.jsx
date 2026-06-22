@@ -79,7 +79,7 @@ const FileUpload = ({ onAnalysisComplete }) => {
             id="file-upload" 
             style={{ display: 'none' }} 
             onChange={handleFileChange}
-            accept=".txt,.md,.pdf,.docx,.rtf"
+            accept=".txt,.md,.pdf,.docx,.rtf,.xlsx,.pptx,.csv,.html"
             disabled={isUploading}
           />
           
@@ -95,8 +95,8 @@ const FileUpload = ({ onAnalysisComplete }) => {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
               <UploadCloud size={48} color="var(--text-muted)" />
               <p>Arrastra tu archivo aquí o <strong>haz clic para explorar</strong></p>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                Soporta TXT, MD, PDF, DOCX, RTF (Máx 25MB)
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: '80%', margin: '0 auto' }}>
+                Soporta TXT, MD, PDF, DOCX, RTF, XLSX, PPTX, CSV, HTML (Máx 25MB)
               </p>
             </div>
           )}

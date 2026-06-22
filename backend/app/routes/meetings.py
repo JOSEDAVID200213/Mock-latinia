@@ -301,6 +301,10 @@ async def get_supported_formats():
             {"extension": ".docx", "name": "Microsoft Word", "complexity": "medium", "cost_factor": 1.1},
             {"extension": ".pdf", "name": "PDF", "complexity": "medium", "cost_factor": 1.2},
             {"extension": ".rtf", "name": "Rich Text Format", "complexity": "medium", "cost_factor": 1.1},
+            {"extension": ".xlsx", "name": "Microsoft Excel", "complexity": "medium", "cost_factor": 1.1},
+            {"extension": ".pptx", "name": "Microsoft PowerPoint", "complexity": "medium", "cost_factor": 1.1},
+            {"extension": ".csv", "name": "Valores separados por comas", "complexity": "low", "cost_factor": 1.0},
+            {"extension": ".html", "name": "Página Web (HTML)", "complexity": "low", "cost_factor": 1.0},
         ],
         "max_file_size_mb": MAX_FILE_SIZE_MB,
     }

@@ -34,7 +34,7 @@ APPS_SCRIPT_URL = os.getenv("APPS_SCRIPT_URL", "")
 MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", "25"))
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
-ALLOWED_EXTENSIONS = {".txt", ".md", ".docx", ".pdf", ".rtf"}
+ALLOWED_EXTENSIONS = {".txt", ".md", ".docx", ".pdf", ".rtf", ".xlsx", ".pptx", ".csv", ".html"}
 ALLOWED_MIME_TYPES = {
     "text/plain",
     "text/markdown",
@@ -42,9 +42,12 @@ ALLOWED_MIME_TYPES = {
     "application/pdf",
     "application/rtf",
     "text/rtf",
-    # Algunos sistemas reportan estos MIME types alternativos
     "application/x-rtf",
     "application/msword",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "text/csv",
+    "text/html",
 }
 
 # --- CORS ---

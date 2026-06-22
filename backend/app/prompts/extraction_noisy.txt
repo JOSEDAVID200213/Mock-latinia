@@ -1,36 +1,174 @@
-CONTEXTO ADICIONAL IMPORTANTE:
-El texto fue extraído de un documento con formato {format_type} y puede contener errores o artefactos de la conversión. Ten en cuenta lo siguiente:
+CONTEXTO DEL DOCUMENTO:
+El texto fue extraído de un archivo con formato {format_type} mediante conversión automática a Markdown y puede contener imperfecciones. Aplica las siguientes reglas de limpieza ANTES de analizar el contenido:
 
-- Ignora caracteres sueltos, secuencias sin sentido, o texto corrupto.
-- Intenta reconstruir palabras que estén cortadas o mal formateadas.
-- Los saltos de línea pueden no corresponder a párrafos reales.
-- Si detectas texto duplicado (encabezados/pies de página repetidos), ignóralo.
-- Prioriza extraer la información que puedas identificar con confianza.
-- Si un dato es ambiguo debido a la calidad del texto, márcalo con "(verificar)" al final.
+- Ignora caracteres sueltos, secuencias sin sentido o texto claramente corrupto.
+- Reconstruye palabras cortadas o con formato roto cuando el contexto lo permita.
+- Si detectas texto duplicado (encabezados, pies de página, marcas de agua repetidas), ignóralo.
+- Los saltos de línea o espacios irregulares no necesariamente separan ideas distintas.
+- Si un dato es ambiguo por calidad del texto, extráelo de todas formas y marca con "(verificar)".
+- Prioriza extraer TODA información identificable con razonable confianza.
 
-A pesar de los posibles errores en el texto fuente, genera un resumen estructurado lo más completo posible.
+A pesar de los posibles artefactos en el texto, genera el documento más completo y útil posible.
 
-Analiza la siguiente transcripción de reunión y extrae la información estructurada.
+---
 
-Devuelve ÚNICAMENTE un JSON válido con la siguiente estructura exacta (sin texto adicional, sin markdown):
+Analiza en profundidad la siguiente transcripción de reunión y genera un documento de resumen completo y ejecutivo en formato Markdown.
 
-{
-  "meeting_name": "Nombre de la reunión según el contexto",
-  "date_detected": "Fecha si se menciona (formato YYYY-MM-DD) o null",
-  "participants": ["Lista de participantes mencionados"],
-  "meeting_objective": "Objetivo principal de la reunión o null",
-  "topics_discussed": ["Tema 1", "Tema 2"],
-  "decisions_made": ["Decisión 1", "Decisión 2"],
-  "pending_tasks": [
-    {
-      "task": "Descripción de la tarea",
-      "responsible": "Nombre del responsable o null",
-      "deadline": "Fecha límite si se menciona o null"
-    }
-  ],
-  "risks_and_blockers": ["Riesgo o bloqueo identificado"],
-  "next_steps": ["Próximo paso 1", "Próximo paso 2"],
-  "executive_summary": "Resumen ejecutivo de 3-5 oraciones."
-}
+Extrae y organiza TODA la información disponible siguiendo esta estructura. Omite las secciones para las cuales genuinamente no existe información en la transcripción.
+
+---
+
+# 📋 [Nombre de la reunión — infiere un título descriptivo si no está explícito]
+
+## 🗓️ Información General
+
+| Campo | Detalle |
+|-------|---------|
+| **Fecha** | [Fecha detectada o "No especificada"] |
+| **Hora de inicio** | [Si se menciona] |
+| **Hora de fin / Duración** | [Si se menciona] |
+| **Modalidad** | [Presencial / Virtual / Híbrida — inferir si es posible] |
+| **Plataforma** | [Zoom, Teams, Meet, etc. — si se menciona] |
+| **Idioma(s) de la reunión** | [Listar todos los idiomas detectados] |
+| **Tipo de reunión** | [Standup / Planificación / Revisión / Kick-off / Retrospectiva / Comercial / etc.] |
+| **Calidad de la transcripción** | [Buena / Regular / Deficiente — evaluación del texto fuente] |
+
+---
+
+## 👥 Participantes
+
+Para cada participante identificado:
+
+| Nombre | Rol / Cargo | Empresa / Área | Observaciones |
+|--------|-------------|----------------|---------------|
+| [Nombre] | [Rol si se menciona] | [Empresa/Área si se menciona] | [Ej: facilitador, tomó el acta, llegó tarde] |
+
+**Total de participantes identificados:** [N]
+
+> Si hay participantes mencionados pero no identificados por nombre, listarlos como "Participante no identificado" con cualquier dato disponible.
+
+---
+
+## 🎯 Objetivos de la Reunión
+
+### Objetivo Principal
+[Descripción clara del propósito central de la reunión]
+
+### Objetivos Secundarios
+- [Objetivo secundario 1]
+- [Objetivo secundario 2]
+
+### ¿Se cumplieron los objetivos?
+[Sí / No / Parcialmente — con una breve justificación]
+
+---
+
+## 📌 Agenda y Temas Tratados
+
+Lista los temas en el orden en que fueron discutidos:
+
+1. **[Tema 1]** — [Breve descripción de qué se discutió]
+2. **[Tema 2]** — [Breve descripción]
+3. **[Tema N]** — [Breve descripción]
+
+---
+
+## ✅ Decisiones Tomadas
+
+Lista cada decisión como una afirmación clara y accionable:
+
+- **[Decisión 1]:** [Descripción detallada. Quién la tomó / quién la apoyó si se menciona]
+- **[Decisión 2]:** [Descripción detallada]
+
+---
+
+## 📝 Tareas y Compromisos
+
+| # | Tarea | Responsable | Fecha Límite | Prioridad | Estado |
+|---|-------|-------------|--------------|-----------|--------|
+| 1 | [Descripción clara de la tarea] | [Nombre o "Sin asignar"] | [Fecha o "Sin fecha"] | [Alta/Media/Baja — inferir si es posible] | Pendiente |
+| 2 | ... | ... | ... | ... | Pendiente |
+
+> Incluye TODOS los compromisos, acciones de seguimiento y "to-dos" mencionados, aunque sean informales.
+
+---
+
+## 💡 Ideas y Propuestas
+
+Ideas que se mencionaron pero que aún no se decidieron o aprobaron:
+
+- **[Idea/Propuesta 1]:** [Descripción] — Propuesta por: [Nombre si se menciona]
+- **[Idea/Propuesta 2]:** [Descripción]
+
+---
+
+## ⚠️ Riesgos, Problemas y Bloqueantes
+
+| Tipo | Descripción | Impacto | Responsable de gestionar |
+|------|-------------|---------|--------------------------|
+| Riesgo | [Descripción] | [Alto/Medio/Bajo] | [Nombre o "Sin asignar"] |
+| Problema actual | [Descripción] | [Alto/Medio/Bajo] | [Nombre o "Sin asignar"] |
+| Bloqueante | [Descripción] | [Alto/Medio/Bajo] | [Nombre o "Sin asignar"] |
+
+---
+
+## 🔗 Dependencias y Menciones Externas
+
+- **Proyectos / Sistemas mencionados:** [Lista]
+- **Herramientas / Tecnologías mencionadas:** [Lista]
+- **Equipos / Áreas externas mencionadas:** [Lista]
+- **Clientes / Stakeholders mencionados:** [Lista]
+- **Documentos / Recursos referenciados:** [Lista]
+
+---
+
+## 🌐 Contexto Multilingüe
+
+> Solo incluir esta sección si la reunión tuvo participantes en más de un idioma.
+
+- **Idiomas detectados:** [Lista]
+- **Participantes por idioma:** [Ej: Español — Juan, María; Inglés — John]
+- **Puntos discutidos en cada idioma:** [Resumen por idioma si aplica]
+- **Barreras de comunicación identificadas:** [Si las hubo]
+
+---
+
+## 📊 Métricas y Datos Mencionados
+
+Cualquier cifra, KPI, porcentaje, fecha objetivo o métrica mencionada:
+
+| Métrica / Dato | Valor | Contexto |
+|----------------|-------|---------|
+| [Nombre] | [Valor] | [Qué significa en el contexto de la reunión] |
+
+---
+
+## 🏁 Próximos Pasos
+
+Lista ordenada de las acciones que se acordaron como continuación:
+
+1. [Próximo paso 1] — Responsable: [Nombre] — Para: [Fecha]
+2. [Próximo paso 2] — Responsable: [Nombre] — Para: [Fecha]
+
+**Próxima reunión:** [Fecha y hora si se menciona, o "No programada"]
+
+---
+
+## 📝 Resumen Ejecutivo
+
+[Párrafo de 4-6 oraciones que capture la esencia de la reunión: contexto, lo más importante discutido, las decisiones clave tomadas, y los próximos pasos críticos. Redactado para un directivo que no asistió.]
+
+---
+
+## 🗣️ Citas y Momentos Destacados
+
+> Solo incluir si hay frases relevantes, compromisos verbales fuertes, o momentos de tensión/acuerdo notable.
+
+- **[Nombre]:** *"[Cita textual o paráfrasis fiel del texto]"*
+- **Momento destacado:** [Descripción de algún punto de inflexión en la reunión]
+
+---
+
+*Documento generado automáticamente a partir de transcripción con posibles artefactos de conversión. Revisar antes de distribuir.*
 
 TRANSCRIPCIÓN:
