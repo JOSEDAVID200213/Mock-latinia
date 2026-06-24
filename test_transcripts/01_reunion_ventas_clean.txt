@@ -1,0 +1,82 @@
+TRANSCRIPCIÓN DE REUNIÓN — REVISIÓN MENSUAL DE VENTAS Q2
+Empresa: Latinia Corp
+Fecha: 15 de junio de 2025
+Hora: 10:00 AM - 11:45 AM
+Modalidad: Híbrida (Sede Bogotá + participantes remotos)
+Participantes presenciales: Carlos Méndez (Director Comercial), Ana Ríos (Gerente de Ventas Norte), Felipe Torres (Analista de CRM)
+Participantes remotos: Daniela Gómez (Gerente de Ventas Sur), Rodrigo Vargas (Key Account Manager)
+Facilitador: Carlos Méndez
+
+---
+
+CARLOS MÉNDEZ: Buenos días a todos. Empezamos puntual. El objetivo de hoy es revisar el cierre de ventas de mayo, analizar el pipeline de junio y definir las acciones para cumplir la meta de Q2. Tienen el tablero actualizado en sus correos desde ayer. ¿Alguna pregunta antes de comenzar?
+
+ANA RÍOS: No, todo claro.
+
+DANIELA GÓMEZ: Yo sí tengo una pregunta sobre la metodología de cálculo del pipeline ponderado, pero puede ser al final.
+
+CARLOS MÉNDEZ: Perfecto, Daniela, lo anotamos para el cierre. Empecemos con el resumen de mayo. Felipe, ¿puedes compartir los números?
+
+FELIPE TORRES: Claro. Mayo cerró con $1.840 millones de pesos en ventas nuevas, que representa el 92% de la meta mensual de $2.000 millones. La región Norte lideró con $820 millones, seguida por la región Sur con $650 millones. Las cuentas key account aportaron $370 millones. Tuvimos 14 cierres en el mes, el ticket promedio fue de $131 millones, que es consistente con el histórico. La tasa de conversión del pipeline fue del 31%, un punto por debajo del 32% de abril.
+
+CARLOS MÉNDEZ: Gracias Felipe. Ana, ¿qué impulsó el buen desempeño de la región Norte?
+
+ANA RÍOS: Principalmente el cierre de dos contratos que venían de Q1 y que finalmente firmaron en mayo. Uno con Constructora Andina por $280 millones y otro con Distribuidora El Éxito por $195 millones. También tuvimos cuatro cierres nuevos, más pequeños, entre $50 y $80 millones cada uno. La prospección de abril dio frutos. El único punto débil fue el sector retail, donde perdimos dos oportunidades frente a un competidor que bajó precios agresivamente.
+
+CARLOS MÉNDEZ: ¿Quién es ese competidor?
+
+ANA RÍOS: SoftLogic. Están haciendo descuentos del 25 al 30% para ganar participación. Preocupa porque dos de nuestros clientes actuales me preguntaron si les igualamos precios.
+
+RODRIGO VARGAS: Confirmo eso desde key accounts. Tuve una llamada con Almacenes Versalles y me dijeron exactamente lo mismo. Voy a enviar esta semana una propuesta de valor reforzada destacando nuestro servicio postventa y la integración con sus sistemas ERP actuales. Creo que el precio no puede ser nuestra única palanca.
+
+CARLOS MÉNDEZ: Totalmente de acuerdo, Rodrigo. La guerra de precios no la vamos a ganar y no debemos intentarlo. Construyamos el argumento de valor. ¿Ya tenemos los casos de éxito actualizados del Q1?
+
+FELIPE TORRES: Sí, están en la carpeta compartida de Drive. Tenemos tres casos nuevos: Industrias Samper, Cementos Boyacá y Logística Express. Todos con métricas de ROI documentadas.
+
+DANIELA GÓMEZ: Perfecto, yo los voy a usar esta semana en las reuniones con Textiles del Pacífico y Agrosuiza. Son dos oportunidades calientes en el sur.
+
+CARLOS MÉNDEZ: Bien. Ahora miremos el pipeline de junio. Felipe.
+
+FELIPE TORRES: El pipeline total de junio tiene 38 oportunidades activas por un valor bruto de $8.200 millones. El pipeline ponderado, aplicando las probabilidades de cierre por etapa, es de $2.940 millones. La meta de junio es $2.200 millones, así que en teoría hay cobertura suficiente, pero históricamente cerramos entre el 70 y 75% del pipeline ponderado, lo que nos dejaría entre $2.058 y $2.205 millones. Es un escenario ajustado.
+
+ANA RÍOS: Las oportunidades en etapa de negociación en mi región suman $1.100 millones. Las más críticas son Ferretería Nacionales, que debería cerrar esta semana si aprueban el contrato en su junta directiva, y Constructora Bolivar que está en revisión de propuesta.
+
+DANIELA GÓMEZ: En el sur tengo $890 millones en negociación. Textiles del Pacífico es la más grande, $420 millones, y esperan respuesta de su casa matriz en España para el viernes. Si aprueban, cerramos el lunes. Agrosuiza está más lenta, probablemente pasa a julio.
+
+RODRIGO VARGAS: Key accounts tiene un pipeline de $950 millones para junio. La más relevante es la renovación de Almacenes Versalles, $380 millones, que se renovaba automáticamente pero dada la situación con SoftLogic voy a manejarla como una negociación activa. También tenemos una expansión de módulos con Industrias Samper, $240 millones, que está muy avanzada.
+
+CARLOS MÉNDEZ: Okay. Hay tres temas que quiero abordar antes de cerrar. Primero: necesitamos una respuesta comercial estructurada ante SoftLogic. Rodrigo, ¿puedes liderar esto con apoyo de producto y marketing?
+
+RODRIGO VARGAS: Sí, yo lo coordino. Necesito que alguien de producto me dé datos duros sobre la diferenciación técnica, especialmente en integración ERP. ¿Felipe puede jalarnos un dato de tiempo promedio de implementación comparado con el mercado?
+
+FELIPE TORRES: Lo tengo en el CRM, te lo envío hoy.
+
+CARLOS MÉNDEZ: Segundo tema: Felipe, necesito que el informe de pipeline sea más granular. Quiero ver oportunidades por industria además de por región. Así podemos detectar sectores donde estamos flojos.
+
+FELIPE TORRES: Lo puedo ajustar para la próxima semana.
+
+CARLOS MÉNDEZ: Perfecto. Tercer tema: Daniela, la oportunidad de Textiles del Pacífico es enorme. ¿Qué necesitas de nosotros para acelerar el cierre?
+
+DANIELA GÓMEZ: Honestamente, lo más útil sería que tú, Carlos, hagas una llamada de respaldo con el CEO de Textiles. Se llama Pedro Alvarado. Es una señal de compromiso de la empresa que valoran mucho. Una llamada de diez minutos podría inclinar la balanza.
+
+CARLOS MÉNDEZ: Hecho. Felipe, ¿puedes coordinar esa llamada para esta semana?
+
+FELIPE TORRES: Sí, te bloqueo agenda hoy.
+
+DANIELA GÓMEZ: Y sobre mi pregunta del pipeline ponderado, ¿podemos revisar los porcentajes por etapa? Siento que el 40% que asignamos a la etapa de "propuesta enviada" es bajo. En mi región estoy convirtiendo más cerca del 55% desde esa etapa.
+
+CARLOS MÉNDEZ: Buena observación. Felipe, ¿puedes hacer un análisis histórico por región para ver si los porcentajes deben diferenciarse?
+
+FELIPE TORRES: Lo analizo y les comparto antes del miércoles.
+
+CARLOS MÉNDEZ: Perfecto. Resumen de compromisos: Rodrigo lidera la respuesta comercial a SoftLogic con datos de Felipe para hoy. Felipe ajusta el informe de pipeline por industria para la próxima semana y analiza los porcentajes históricos por región antes del miércoles. Yo hago la llamada con Pedro Alvarado de Textiles coordinada por Felipe esta semana. Ana hace seguimiento a Ferretería Nacionales y Constructora Bolivar. Daniela cierra Textiles del Pacífico. ¿Algún punto adicional?
+
+ANA RÍOS: Sí, rápido. Tenemos tres clientes con renovaciones en julio que deberíamos empezar a gestionar ahora. ¿Arrancamos la campaña de renovaciones en la segunda semana de junio?
+
+CARLOS MÉNDEZ: Sí, totalmente. Rodrigo, ¿puedes incluir eso en tu agenda de key accounts?
+
+RODRIGO VARGAS: Ya lo tenía agendado, sin problema.
+
+CARLOS MÉNDEZ: Listo. Excelente reunión, equipo. Nos vemos el miércoles con el análisis del pipeline y la respuesta a SoftLogic. Buen trabajo.
+
+FIN DE LA REUNIÓN — 11:43 AM

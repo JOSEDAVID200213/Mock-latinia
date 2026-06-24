@@ -1,0 +1,55 @@
+R3UNi0N - - - Comi7e d3 Ri3sg0s y C0mpl1anc3
+Ltna C0rp | 5 jun!0 2025 | ~8:30 AM
+P4rtic.: Alej. H3rr3ra (Rsg.), Patr. S4nchez (Legal), Bern. Cifuentes (Ops), Mg. Torres (IT Sec.)
+
+###########################################################
+[NOTA: Grabacion de baja calidad - microfono con falla - se reconstruyo parcialmente]
+###########################################################
+
+A. Herr3ra: buen... ...empec3mos. Tre... tres temas hoy. Uno: incid3nte de s3guridad de la semana pasada. Dos: actualizaci0n de la polic... de privacidad por la nueva norm... ...y tres: el tema del prov3edor externo que... ...ya saben.
+
+[FRAGMENTO PERDIDO - 2 min aprox]
+
+P. Sanch3z: ...como les d3cia, la notificacion a la Sup3rintendencia debe hacerse antes del... del 30 de junio porque la Resolucion 2024-087 exige que tod... las empresas con mas de 300 clientes actualicen sus politicas antes de esa... [corte] ...tenemos 398 clientes activos entonces si aplicamos.
+
+Herrera: ok. Qu3 necesit4mos exactamente para el documento?
+
+Sanchez: necesit... [ininteligible] ...basicamente tres secciones nuevas: una sobre transferencia intern... de datos (por lo de Mexico que va a arrancar), otra sobre derechos de los titulares que es mas granular que lo que tenemos hoy, y la tercera sobre el uso de inteligencia artific... en el procesamiento de datos del cliente porque vamos a lanzar el modulo de IA de flujo de... [audio muy bajo - 4 seg] ...cash.
+
+B. Cifuentes: eso ultimo es lo que mas me preocupa honestam... porque en ningun lado del contrato actual con los clientes decimos que vamos a usar sus datos financieros para ent... ...enar un modelo de IA.
+
+Sanchez: exacto. Hay que hacer una adenda a los contratos. O... la opcion 2 es incluirlo en los terminos de uso del producto como opt-in explicit... El opt-in es mas facil de implementar technicamente pero legalmente...  ...es igual de valido si esta bien redactado.
+
+[CORTE DE 30 SEG - AUDIO NO RECUPERABLE]
+
+Mg. Torres: ...el incidente en si fue un intento de phishing contra 3 empleados del area comercial. Los tres... [ruido] ...recibieron un correo suplantando a... a IT solicitando credenciales del CRM. Uno de ellos hizo clic en el enlace pero no ingreso las credenciales gracias a que... ...el navegador mostro alerta de certificado invalido.
+
+Herrera: que tan cerca estuvimos de un compromiso real?
+
+Torres: tecnicamente... ...el enlace llevaba a un formulario que hubiera capturado usuario y contrasena del CRM. Si el empleado hubiera ingresado los datos, el atacante tendria acceso a todo el historial de clientes, contratos y pipeline. Afort... ...unadamente no paso.
+
+Herrera: que medidas tomamos?
+
+Torres: tres inm3diatas: uno, bl0queamos el dominio atacante en el proxy. Dos, enviamos alerta a toda la empresa con el ejemplo real pero anonimizado. Tres, programamos simulacro de phishing para las proximas dos semanas para ver quien cae. Medidas de mediano plazo: implementar MFA obligatorio para el CRM antes del... [audio interrumpido] ...15 de julio. Y revisar los permisos del CRM para que solo los roles que necesitan acceso total lo tengan.
+
+Cifuentes: en ops tuvimos un incidente similar hace unos meses pero menos sofisticado. Sugiero que el simulacro de phishing sea trimestral, no solo esta vez.
+
+Torres: totalm3nte de acuerdo. Lo incluyo en el plan de seguridad anual.
+
+[FRAGMENTO PERDIDO - 1.5 min]
+
+Herrera: ...y el tema del prov3edor. Bern, tu tienes la info.
+
+Cifuentes: si. El proveedor de servicios de nomina ter... ...cero subcontrato una parte del procesamiento a una empresa en... en Brasil sin notificarnos. Eso viola el contrato que firmamos que prohibe la subcontratacion sin autorizacion previa. Tenemos dos opciones: exigir que reviertan el arrangement o... ...modificar el contrato para permitirlo con condiciones. El argumento de el... ...llos es que la empresa en Brasil tiene cert... ...ificacion SOC 2 tipo II y que el procesamiento es igual de seguro.
+
+Sanchez: desde lo legal el incumplimiento contractual ya ocurrio independientemente de la calidad de la sub... ...contratista. Tenemos derecho a rescindir el contrato o a negociar una clausula que regularice la situacion con condiciones nuestras: auditoria del subcontratista, notificacion previa para cambios futuros, y penalidad si vuelve a pasar sin autorizacion.
+
+Herrera: prefiero regularizarlo si el subcontratista es solido. No quiero cambiar de proveedor de nomina a mitad de año. Patricia, redacta la adenda al contrato.
+
+Sanchez: lo hago. Necesito que Bernardo me pase la certificacion SOC 2 del subcontratista y el detalle de que datos exactamente procesan ellos.
+
+Cifuentes: te lo paso esta semana.
+
+Herrera: bien. Cierro con los compromisos. Patricia: adenda de privacidad para clientes (opt-in IA) y adenda a contrato de nomina, ambas para el... ...25 de junio. Mg: MFA en CRM antes del 15 julio y simulacros trimestrales de phishing. Bernardo: certif. SOC 2 y detalle de datos a Patricia esta semana. Yo: reporte a la Superintendencia antes del 30 junio. Hasta...
+
+[AUDIO FINALIZA ABRUPTAMENTE]

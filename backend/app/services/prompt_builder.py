@@ -80,10 +80,17 @@ class PromptBuilder:
         # Concatenar la transcripción al final del template
         user_prompt = user_template + "\n\nTRANSCRIPCIÓN:\n" + transcript_text
 
-        logger.info(
-            f"Prompt construido: template={template_file}, "
-            f"quality={quality_score:.2f}, format={format_type}"
-        )
+        # Log claro y visible del path de procesamiento elegido
+        if quality_score < NOISY_QUALITY_THRESHOLD:
+            logger.warning(
+                f"🔴 PROMPT RUIDOSO seleccionado | quality={quality_score:.2f} "
+                f"(umbral={NOISY_QUALITY_THRESHOLD}) | format={format_type} | template={template_file}"
+            )
+        else:
+            logger.info(
+                f"🟢 PROMPT LIMPIO seleccionado  | quality={quality_score:.2f} "
+                f"(umbral={NOISY_QUALITY_THRESHOLD}) | format={format_type} | template={template_file}"
+            )
 
         return system_prompt, user_prompt, template_file
 

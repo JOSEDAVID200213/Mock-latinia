@@ -1,0 +1,82 @@
+SPRINT PLANNING — SPRINT 23
+Equipo: Plataforma Core
+Fecha: 2 de junio de 2025
+Duración: 2 horas
+Facilitador: Mariana Ospina (Scrum Master)
+Product Owner: Tomás Restrepo
+Equipo: Laura Quintero (Backend Senior), Diego Salinas (Backend Mid), Valentina Cruz (Frontend Senior), Samuel Herrera (QA), Andrés Mora (DevOps)
+Herramienta: Jira + Confluence
+
+---
+
+MARIANA OSPINA: Buenos días equipo. Empezamos el Sprint Planning del Sprint 23. Velocity promedio de los últimos tres sprints: 38 puntos. Capacidad de este sprint: Valentina tiene dos días de vacaciones el viernes y lunes, así que proyectamos 34 puntos disponibles. Tomás, ¿nos presentas el backlog priorizado?
+
+TOMÁS RESTREPO: Claro. Tenemos tres grandes épicas activas. Épica 1: módulo de notificaciones push. Épica 2: migración a Postgres 16. Épica 3: dashboard de analíticas para clientes. El stakeholder más urgente esta semana fue la épica de notificaciones porque el equipo comercial tiene tres demos con clientes enterprise el próximo martes y necesitan mostrar la funcionalidad básica de notificaciones.
+
+LAURA QUINTERO: ¿Qué tan básica hablamos? Porque hay una diferencia enorme entre "enviar una notificación" y "notificaciones con templates configurables".
+
+TOMÁS RESTREPO: Para las demos necesitamos: envío de notificación desde el panel de administrador, entrega al dispositivo móvil confirmada, y que se vea la notificación en el historial del usuario. Templates pueden esperar al Sprint 24.
+
+LAURA QUINTERO: Okay, eso es manejable. Tengo una historia de usuario ya escrita para eso: US-421, "Como administrador quiero enviar notificaciones manuales a segmentos de usuarios". Estaba estimada en 8 puntos. Con el scope que defines, quizás baja a 5.
+
+DIEGO SALINAS: Yo diría que siguen siendo 8. El endpoint de envío parece sencillo, pero el sistema de colas para garantizar la entrega confiable es lo que toma tiempo. Si usamos el RabbitMQ que ya tenemos, bien, pero hay que adaptar el consumer.
+
+ANDRÉS MORA: El RabbitMQ está en la versión 3.10. Para lo que necesitamos debería funcionar sin upgrade. Yo puedo revisar la config esta mañana y confirmar.
+
+SAMUEL HERRERA: Para QA, necesito al menos dos días hábiles de testing en dispositivos iOS y Android antes de las demos. Si el desarrollo termina el jueves tengo viernes y el lunes de la semana siguiente. Valentina no está esos días pero el feature de frontend es más sencillo.
+
+VALENTINA CRUZ: Sí, el frontend de notificaciones es básicamente un banner de confirmación en el panel admin y listar las notificaciones enviadas. Puedo tenerlo listo el miércoles si el API está disponible desde el martes en ambiente de staging.
+
+LAURA QUINTERO: Si empiezo hoy, el endpoint principal lo tengo el martes al mediodía. Diego, ¿puedes tomar la parte del consumer de colas?
+
+DIEGO SALINAS: Sí, me comprometo al martes EOD en staging.
+
+MARIANA OSPINA: Perfecto, eso le da tiempo a Valentina de conectar el miércoles y a Samuel de hacer testing desde el jueves. La historia US-421 se mantiene en 8 puntos. ¿Algún riesgo?
+
+ANDRÉS MORA: Uno: el ambiente de staging tiene un problema intermitente con el certificado SSL que todavía no hemos resuelto. Si persiste el lunes, puede retrasar el deploy de Laura y Diego. Estoy en ello, pero quiero ser transparente.
+
+SAMUEL HERRERA: Ese certificado me bloqueó la semana pasada durante medio día. ¿No lo podemos priorizar como deuda técnica en este sprint?
+
+MARIANA OSPINA: Tomás, ¿lo metemos como una historia técnica?
+
+TOMÁS RESTREPO: Sí, súmenla. Puntos estimados, Andrés?
+
+ANDRÉS MORA: 3 puntos. Es básicamente renovar el certificado con Let's Encrypt y automatizar la renovación en el pipeline de CI/CD para que no vuelva a pasar.
+
+MARIANA OSPINA: Agregada. Siguiente historia: US-398, migración a Postgres 16. Laura, ¿cómo estamos con el análisis de compatibilidad?
+
+LAURA QUINTERO: Hice el análisis la semana pasada. Hay una dependencia crítica: nuestra versión de SQLAlchemy (1.4) no soporta algunas funcionalidades de Postgres 16 sin actualizar primero. Actualizar SQLAlchemy a 2.0 implica cambios en la forma en que declaramos los modelos. Tengo documentados 34 archivos que necesitan ajuste. No es todo cambio, la mayoría es quitar `Query` legacy y migrar a `select()`. Estimé ese trabajo en 13 puntos.
+
+TOMÁS RESTREPO: ¿Podemos hacer la migración de SQLAlchemy en este sprint y dejar Postgres 16 para el siguiente?
+
+LAURA QUINTERO: Sí, eso tiene más sentido. Así no arriesgamos la estabilidad del ambiente productivo justo antes de las demos.
+
+TOMÁS RESTREPO: De acuerdo. Historia técnica: migración de SQLAlchemy 1.4 a 2.0. 13 puntos. Laura y Diego.
+
+DIEGO SALINAS: Espera, 13 puntos para dos personas en un sprint que también tiene las notificaciones es bastante apretado. Yo puedo ayudar con 5 de esos 13, los módulos más sencillos. Laura toma los 8 restantes que son los más complejos.
+
+MARIANA OSPINA: ¿Están cómodos con eso considerando las vacaciones de Valentina y el SSL?
+
+LAURA QUINTERO: Yo sí. Si el SSL se resuelve el lunes y no hay sorpresas en las notificaciones, es alcanzable.
+
+DIEGO SALINAS: Sí, pero aviso desde ahora que si aparece algo inesperado en el consumer de colas, la migración de SQLAlchemy es lo primero que movemos al Sprint 24.
+
+MARIANA OSPINA: Anotado como riesgo. ¿Dashboard de analíticas?
+
+TOMÁS RESTREPO: Sé que no va a caber en el sprint, pero quiero al menos que Valentina haga el diseño de componentes en Figma. No es desarrollo, más exploración. ¿Dos puntos?
+
+VALENTINA CRUZ: Sí, puedo hacer el wireframe detallado de las tres vistas principales del dashboard. Dos puntos está bien.
+
+MARIANA OSPINA: Hagamos la suma. US-421 notificaciones: 8 puntos. SSL staging: 3 puntos. Migración SQLAlchemy: 13 puntos. Wireframe dashboard: 2 puntos. Total: 26 puntos. Estamos por debajo de la capacidad de 34. ¿Agregamos más?
+
+SAMUEL HERRERA: Hay varios bugs de baja prioridad acumulados que podría cerrar. Tengo estimados cuatro de ellos en un total de 5 puntos. Son bugs visibles para el usuario pero no bloqueantes.
+
+TOMÁS RESTREPO: Agrégalos, Samuel. Vienen de sprints anteriores y los clientes los han reportado.
+
+MARIANA OSPINA: Total final: 31 puntos. Cómodo dentro de la capacidad de 34. Resumen de compromisos del sprint: Laura: endpoint de notificaciones + parte compleja de SQLAlchemy. Diego: consumer de colas + parte sencilla de SQLAlchemy. Valentina: frontend de notificaciones + wireframe dashboard (disponible lunes a jueves). Andrés: SSL staging + certificado Let's Encrypt automatizado. Samuel: QA de notificaciones + 4 bugs legacy. Definition of Done: código con cobertura de tests >= 80%, PR aprobado por dos revisores, desplegado en staging, validado por QA. Sprint Review: lunes 16 de junio a las 3 PM. ¿Alguna pregunta?
+
+ANDRÉS MORA: ¿Podemos definir un canal de Slack dedicado para bloqueantes del sprint? El canal general tiene mucho ruido.
+
+MARIANA OSPINA: Buena idea. Lo creo hoy: #sprint-23-blockers. Cerramos. Buen sprint equipo.
+
+FIN — 10:02 AM

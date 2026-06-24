@@ -292,7 +292,7 @@ class GoogleDriveStorage(StorageBackend):
         folder_id = self._ensure_meeting_folder(meeting_id, meeting_name)
         media = MediaIoBaseUpload(
             BytesIO(content.encode('utf-8')),
-            mimetype='text/plain',
+            mimetype='text/html',
             resumable=True
         )
         file_metadata = {

@@ -1,0 +1,98 @@
+Reunion Comite Financiero Trimestral
+Emp|esa: Lat1nia Corp -- Fecha 8 junio 2025
+Hora aprox: 9AM - 10:30am  hora de inicio puede variar
+Participantes: Javier Casas (CFO), Monica Leal (Cont4dora), Pablo Reyes (FP&A), Sandra Vill4mizar (Auditoria)
+
+NB: Esta transcrip. fue generada automaticamente por IA de voz y puede contener err0res de reconocimiento
+
+=============================================================
+
+[INICIO - 09:02]
+
+Jav Casas: Ok empec3mos... Monica tienes el cierre de mayo?
+
+Monica Leal: si si, espera que abro el arch... [pausa] ok ya. El cierre de mayo quedo en... $4.820 millones de ingresos brutos, con costos de ventas de $1.940 millones. Margen bruto resultado 59.8%. Ebitda del mes fue $1.102 millones, margen ebitda 22.8%.
+
+Casas: bien eso esta en linea. Y los gastos operativos como quedaron? porq me parecio que habia un sobre-ejec en marketing
+
+Leal: si efectiv4mente. Marketing ejecuto $387 millones vs presupuesto de $310 millones. La diferencia es $77 millones, 24.8% de sobre-ejecucion. El motivo segun el area es que adelantaron la campana de mitad de año que estaba plan. para junio.
+
+Pablo Reyes: yo habl3 con el director de marketing la semana pas. y me dijo que la decision fue de aprovechar los espacios en digital que estaban mas baratos de lo esperado. El CPM bajo 30% en mayo por menor competencia de anunciantes. Tiene logica pero deberian haberlo comunicado antes.
+
+Casas: ok es justificable pero el proceso tiene q mejorar. Cualquier desviacion mayor al 10% de presupuesto mensual debe tener aprobacion previa del CFO. Sandra, que recomiendan desde auditoria?
+
+Sandra Villamizar: Recomendamos [ruido de fondo - ininteligible 3 seg] ...un procedimiento formal de solicitud de excepcion presupuestal con aprobacion del CFO y notificacion al comite. Podria implementarse en el sistema de ERP actual sin desarrollo adicional.
+
+Casas: de acuerdo. Pablo, redacta la politica esta semana.
+
+Reyes: listo.
+
+[CAMBIO DE TEMA - 09:28]
+
+Casas: sigamos con el flujo de caja. Como va la posicion?
+
+Leal: posicion de caja al 31 de mayo: $8.340 millones. Esto incluye la cuenta de ahorros principal, la fiducia de corto plazo y el CDT que vence el 15 de junio. El CDT son $1.200 millones al 11.2% EA. La pregunta es si lo renovamos o lo usamos para prepagar parte del credito con Bancolombia.
+
+Reyes: hice el analisis. El credito con Bancolombia esta al DTF + 4.5%, que hoy equivale a aproximadamente 15.3% EA. Si prepagamos $1.200 millones del credito ahorramos $183 millones anuales en intereses vs los $134 millones que genera el CDT. Diferencia de $49 millones al año a favor del prepago.
+
+Casas: es claro. Prepaguemos. Cuanto queda del credito despues del prepago?
+
+Leal: el saldo actual del credito es $4.800 millones. Despues del prepago quedaria $3.600 millones. Sigue siendo manejable... [corte de audio - aprox 5 seg] ...el covenant de deuda-ebitda es max 3x, estariamos en 0.9x, muy holgado.
+
+Casas: perfecto. Ejecutamos el 16 de junio cuando vence el CDT. Monica confirma con el banco.
+
+Leal: lo coordino.
+
+[09:41]
+
+Casas: tema de cartera. Como vamos con los vencidos?
+
+Reyes: la cartera vencida a mayo 31 era $1.840 millones. El 62% corresponde a 3 clientes grandes: Constructora Andina $630M (vencida 45 dias, en proceso de cobro activo), Distribuidora Pacifica $420M (cliente con problemas de liquidez, estamos negociando un acuerdo de pago), y Textiles del Sur $289M (acaban de pagar parcialmente $180M, resto en julio segun acuerdo).
+
+Casas: constructora andina me preocupa. 45 dias vencida y $630M es mucho. Tienen problemas de fondo o es demora administrativa?
+
+Reyes: segun el equipo comercial es principalmente administr... [interferencia] ...pero han confirmado capacidad de pago. El gerente financiero de ellos dijo que hacen el pago total antes del 20 de junio.
+
+Casas: necesito eso por escrito. Un correo formal de compromiso. Que el equipo comercial lo gestione hoy.
+
+Reyes: ok se lo transmito a Carlos Mendez de ventas.
+
+Casas: bien. Y Distribuidora Pacifica? eso es mas delicado.
+
+Reyes: si. La propuesta que hicimos es: $140M inmediatos (tienen liquidez para eso), $140M el 15 de julio, $140M el 15 de agosto. Total $420M en 3 cuotas. Ellos propusieron 4 cuotas, nosotros 3. Estamos en negociacion.
+
+Sandra Villamizar: desde auditoria... [audio bajo - dificil escuchar] ...recomendamos provisionar el 30% de esa cartera como precaucion por si la negociacion no prospera. Son $126 millones de provision.
+
+Casas: lo incluimos en el cierre de junio. Monica, coordina con contabilidad.
+
+Leal: si señor.
+
+[TEMA PRESUPUESTO H2 - 10:05]
+
+Casas: ultimo punto. La revision del presupuesto para H2. Pablo, tienes el modelo?
+
+Reyes: si. El modelo base proyecta ingresos de H2 en $28.400 millones, que representaria un crecimiento del 26% vs H2 2024 de $22.500M. Los supuestos principales: tasa de cierre del pipeline del 72%, precio promedio estable, y churn del 1.8% semestral. Si se materializa la oportunidad de mexico, agregamos $1.800M adicionales en H2 pero con incertidumbre alta.
+
+Casas: el supuesto de tasa de cierre del 72%, es conservador o agresivo vs el historico?
+
+Reyes: historico de los ultimos 4 semestres: 68%, 71%, 73%, 70%. Promedio: 70.5%. Estamos usando 72% que es ligeramente optimista pero no irrazonable dado que el pipeline de H2 tiene mas oportunidades en etapas avanzadas que en semestres anteriores.
+
+Casas: ok. Dejemoslo asi pero hagamos un escenario pesimista con 65% para ver el impacto. Cuanto tiempo necesitas?
+
+Reyes: lo tengo listo para mañana.
+
+Casas: perfecto. Necesito el modelo completo con los 3 escenarios (pesimista, base, optimista) para el lunes. Hay reunion con la junta el martes.
+
+Reyes: confirmado.
+
+Casas: algo mas?
+
+Sandra Villamizar: si, rapido. El informe de auditoria interna del Q1 tiene 4 hallazgos pendientes de cierre. Dos son de baja criticidad pero dos son importantes: control de accesos al ERP y politica de back... [audio interrumpido] ...ups. Necesito que las areas responsables envien evidencia de cierre antes del 20 de junio porque el auditor externo visita el 25.
+
+Casas: Monica, eres responsable del control de accesos al ERP. Que necesitas?
+
+Leal: tengo que coordinar con sistemas para un reporte de usuarios activos y revisar que no haya accesos indebidos. Lo hago esta semana.
+
+Casas: bien. Cerramos. Compromisos: Pablo redacta politica de desviacion presupuestal esta semana. Monica coordina prepago CDT con Bancolombia el 16 junio. Equipo comercial gestiona carta de compromiso de Constructora Andina hoy. Monica provisiona 30% de cartera Distribuidora Pacifica en cierre junio. Pablo entrega modelo H2 con 3 escenarios el lunes. Monica resuelve hallazgo de control de accesos ERP antes del 20 junio. Hasta el proximo comite.
+
+[FIN - 10:31]

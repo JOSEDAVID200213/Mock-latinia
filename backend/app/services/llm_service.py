@@ -77,19 +77,16 @@ class LLMService:
                         generation_config=generation_config,
                     )
 
-                    # La respuesta ya viene en Markdown — no modificar el formato
+                    # La respuesta ya viene en Markdown — enviamos el Markdown RAW al Apps Script
+                    # para que lo parsee y lo renderice como formato nativo en Google Docs
                     markdown_text = response.text
 
-                    # Convertir a texto limpio para Google Docs (sin markdown raw)
-                    from app.utils.markdown_cleaner import markdown_to_docs_text
-                    docs_text = markdown_to_docs_text(markdown_text)
-
-                    # Guardar en Google Docs (via Apps Script) o localmente
+                    # Guardar en Google Docs (via Apps Script) — se envía Markdown puro
                     storage = get_storage_service()
                     doc_url = storage.save_google_doc(
                         meeting_id,
                         f"{meeting_name}_resumen",
-                        docs_text,
+                        markdown_text,
                         meeting_name=meeting_name,
                     )
                     logger.info(f"Resumen guardado como Google Doc: {doc_url}")

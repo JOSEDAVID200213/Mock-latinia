@@ -1,0 +1,150 @@
+Diapositiva 1 — Portada
+PLAN ESTRATÉGICO 2025-2027
+Transformación Digital y Expansión Regional
+Latinia Corp S.A.S.
+Preparado por: Dirección de Estrategia y Planeación
+Versión: 3.2 | Aprobada por Junta Directiva
+Fecha de presentación: 10 de junio de 2025
+
+---
+
+Diapositiva 2 — Agenda
+1. Contexto del mercado y posición actual
+2. Resultados 2024 y lecciones aprendidas
+3. Pilares estratégicos 2025-2027
+4. Hoja de ruta de producto
+5. Expansión regional: México y Perú
+6. Inversión requerida y fuentes de financiación
+7. KPIs y modelo de seguimiento
+8. Riesgos y planes de contingencia
+9. Próximos pasos
+
+---
+
+Diapositiva 3 — Contexto del Mercado
+El mercado de software empresarial en Latinoamérica crecerá un 14% anual hasta 2027 según IDC (2024).
+Los segmentos de mayor crecimiento: ERP cloud (22%), CRM integrado (18%), analítica empresarial (31%).
+Principales drivers del crecimiento:
+- Adopción acelerada de trabajo híbrido post-pandemia
+- Regulaciones de facturación electrónica en Colombia, México y Perú
+- Presión de inversores por eficiencia operativa en medianas empresas
+Amenazas: entrada de players globales (SAP Business One, Odoo, HubSpot) con modelos freemium y precios agresivos.
+Oportunidad diferencial de Latinia: conocimiento del mercado local, soporte en español 24/7, integración nativa con ecosistema colombiano (DIAN, bancario local, nómina).
+
+---
+
+Diapositiva 4 — Resultados 2024
+Indicador | 2023 | 2024 | Var %
+Ingresos totales (COP millones) | $18.400 | $22.100 | +20%
+Clientes activos | 312 | 398 | +28%
+ARR (Annual Recurring Revenue) | $14.200M | $17.800M | +25%
+Churn rate | 8.2% | 6.9% | -1.3pp
+NPS (Net Promoter Score) | 42 | 54 | +12pp
+Headcount | 87 | 112 | +29%
+Lecciones aprendidas:
+- El lanzamiento del módulo de nómina tardó 4 meses más de lo planeado por subestimación de la complejidad regulatoria.
+- La estrategia de precios por usuario fue más efectiva que la licencia anual fija en el segmento PYME.
+- Los clientes adquiridos por referido tienen un LTV 2.3x mayor que los adquiridos por publicidad digital.
+
+---
+
+Diapositiva 5 — Pilares Estratégicos 2025-2027
+PILAR 1: LIDERAZGO DE PRODUCTO
+Objetivo: Ser la plataforma más completa para medianas empresas en Colombia para 2026.
+Iniciativas clave:
+- Módulo de IA para predicción de flujo de caja (H1 2025)
+- Integración nativa con los 5 bancos principales de Colombia (H2 2025)
+- App móvil con capacidades offline (Q1 2026)
+- Marketplace de integraciones con terceros (Q3 2026)
+
+PILAR 2: EXPANSIÓN REGIONAL
+Objetivo: Tener operación comercial activa en México y Perú para finales de 2025.
+México: mercado 10x más grande que Colombia, alta fragmentación, oportunidad en sector manufactura.
+Perú: regulación de facturación electrónica activa desde 2024, ventana de oportunidad de 18 meses.
+Modelo de entrada: alianzas con integradores locales + equipo comercial propio de 3-5 personas por país.
+
+PILAR 3: ESCALABILIDAD OPERATIVA
+Objetivo: Soportar el crecimiento sin degradar márgenes por debajo del 22% EBITDA.
+Iniciativas: automatización de onboarding (reducir tiempo de implementación de 45 a 20 días), self-service para tier PYME, centro de excelencia en soporte con IA.
+
+PILAR 4: CULTURA Y TALENTO
+Objetivo: Ser reconocida como el mejor lugar para trabajar en tech en Colombia (Great Place To Work 2026).
+Plan: programa de carrera técnico (no solo gestión), equity para top performers, cuatro semanas de PTO obligatorio.
+
+---
+
+Diapositiva 6 — Hoja de Ruta de Producto (Roadmap)
+Q3 2025:
+- Beta del módulo de predicción de flujo de caja (ML)
+- Integración Bancolombia y BBVA
+- Mejora UX del módulo de nómina (resultado de NPS bajo en este módulo: 31)
+
+Q4 2025:
+- Lanzamiento oficial predicción de flujo de caja
+- Integración Banco de Bogotá, Davivienda y Scotiabank Colombia
+- Dashboard ejecutivo renovado
+
+Q1 2026:
+- App móvil iOS y Android (capacidades core)
+- Portal de autoservicio para clientes tier PYME
+- Módulo de gestión documental con firma electrónica
+
+Q2-Q3 2026:
+- Marketplace de integraciones (fase 1: 10 partners)
+- Módulo de proyectos y gestión de recursos
+- API pública documentada para developers
+
+---
+
+Diapositiva 7 — Expansión Regional: Plan de Inversión
+País | Inversión requerida | Plazo arranque | Modelo | Break-even proyectado
+México | $2.800M COP | Sep 2025 | Alianza + equipo propio | 18 meses
+Perú | $1.400M COP | Nov 2025 | Alianza inicial | 12 meses
+Total expansión | $4.200M COP | | | Promedio 15 meses
+Fuentes de financiación:
+- FCL (flujo de caja libre) proyectado 2025: $3.100M COP
+- Ronda de inversión Serie A: búsqueda activa, rango objetivo $8.000M COP pre-money
+- Deuda bancaria para capital de trabajo: máximo $1.500M COP
+
+---
+
+Diapositiva 8 — KPIs Estratégicos y Modelo de Seguimiento
+KPI | Meta 2025 | Meta 2026 | Meta 2027
+Ingresos totales (COP M) | $28.000 | $42.000 | $61.000
+Clientes activos | 560 | 820 | 1.200
+ARR | $24.000M | $37.000M | $55.000M
+Churn rate | <5.5% | <4.5% | <4.0%
+NPS | >60 | >65 | >70
+Clientes internacionales (% del total) | 5% | 18% | 30%
+EBITDA margin | >22% | >24% | >26%
+Seguimiento: revisión mensual de OKRs con Dirección, reporte trimestral a Junta Directiva, dashboard de KPIs en tiempo real accesible para todos los líderes.
+
+---
+
+Diapositiva 9 — Riesgos Estratégicos
+Riesgo | Probabilidad | Impacto | Mitigación
+Retraso en desarrollo de producto | Media | Alto | Buffer del 20% en estimaciones, squads dedicados
+Fracaso en expansión internacional | Media | Muy alto | Modelo lean, pilotos de 6 meses antes de inversión plena
+Competencia de players globales con precios agresivos | Alta | Medio | Posicionamiento premium, lock-in por integraciones locales
+No cierre de Serie A | Baja | Alto | Plan B con FCL propio + deuda, expansión diferida
+Pérdida de talento clave | Baja | Alto | Equity, mercado salarial competitivo, cultura diferencial
+
+---
+
+Diapositiva 10 — Próximos Pasos Inmediatos
+Responsable | Acción | Fecha límite
+CEO + CFO | Finalizar teaser para fondos de inversión Serie A | 30 junio 2025
+CTO | Presentar arquitectura del módulo de IA a Junta | 15 julio 2025
+VP Comercial | Primera reunión con integrador líder en México (Grupo TI) | 20 junio 2025
+VP Comercial | Primera reunión con integrador en Perú (SoftPeru) | 30 junio 2025
+CHRO | Presentar programa de equity para aprobación Junta | 25 junio 2025
+Dirección Estrategia | Actualizar modelo financiero con supuestos Serie A | 20 junio 2025
+
+---
+
+Diapositiva 11 — Cierre
+"El mejor momento para transformarse es antes de que la competencia te obligue a hacerlo."
+La ventana de liderazgo en nuestro mercado es real y está abierta hoy.
+La decisión de este plan define si Latinia será un jugador regional en 2027 o seguirá siendo un jugador local.
+Gracias.
+Preguntas y discusión — Junta Directiva, junio 2025.
