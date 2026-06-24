@@ -259,6 +259,25 @@ async def list_meetings():
     return storage.list_meetings()
 
 
+@router.get("/formats/supported")
+async def get_supported_formats():
+    """Retorna los formatos de archivo soportados y sus características."""
+    return {
+        "formats": [
+            {"extension": ".txt", "name": "Texto plano", "complexity": "low", "cost_factor": 1.0},
+            {"extension": ".md", "name": "Markdown", "complexity": "low", "cost_factor": 1.0},
+            {"extension": ".docx", "name": "Microsoft Word", "complexity": "medium", "cost_factor": 1.1},
+            {"extension": ".pdf", "name": "PDF", "complexity": "medium", "cost_factor": 1.2},
+            {"extension": ".rtf", "name": "Rich Text Format", "complexity": "medium", "cost_factor": 1.1},
+            {"extension": ".xlsx", "name": "Microsoft Excel", "complexity": "medium", "cost_factor": 1.1},
+            {"extension": ".pptx", "name": "Microsoft PowerPoint", "complexity": "medium", "cost_factor": 1.1},
+            {"extension": ".csv", "name": "Valores separados por comas", "complexity": "low", "cost_factor": 1.0},
+            {"extension": ".html", "name": "Página Web (HTML)", "complexity": "low", "cost_factor": 1.0},
+        ],
+        "max_file_size_mb": MAX_FILE_SIZE_MB,
+    }
+
+
 @router.get("/{meeting_id}")
 async def get_meeting(meeting_id: str):
     """Obtiene el detalle completo de una reunión."""
@@ -292,25 +311,6 @@ async def download_summary(meeting_id: str, format: str):
         media_type=media_type,
         filename=download_name,
     )
-
-
-@router.get("/formats/supported")
-async def get_supported_formats():
-    """Retorna los formatos de archivo soportados y sus características."""
-    return {
-        "formats": [
-            {"extension": ".txt", "name": "Texto plano", "complexity": "low", "cost_factor": 1.0},
-            {"extension": ".md", "name": "Markdown", "complexity": "low", "cost_factor": 1.0},
-            {"extension": ".docx", "name": "Microsoft Word", "complexity": "medium", "cost_factor": 1.1},
-            {"extension": ".pdf", "name": "PDF", "complexity": "medium", "cost_factor": 1.2},
-            {"extension": ".rtf", "name": "Rich Text Format", "complexity": "medium", "cost_factor": 1.1},
-            {"extension": ".xlsx", "name": "Microsoft Excel", "complexity": "medium", "cost_factor": 1.1},
-            {"extension": ".pptx", "name": "Microsoft PowerPoint", "complexity": "medium", "cost_factor": 1.1},
-            {"extension": ".csv", "name": "Valores separados por comas", "complexity": "low", "cost_factor": 1.0},
-            {"extension": ".html", "name": "Página Web (HTML)", "complexity": "low", "cost_factor": 1.0},
-        ],
-        "max_file_size_mb": MAX_FILE_SIZE_MB,
-    }
 
 
 def _generate_summary_html(summary) -> str:
