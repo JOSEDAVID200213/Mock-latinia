@@ -13,6 +13,12 @@ from app.config import (
 router = APIRouter(tags=["system"])
 
 
+@router.get("/")
+async def root():
+    """Ruta raíz — confirma que el servicio está activo."""
+    return {"status": "ok", "service": "Meeting Summary AI", "version": "1.0.0"}
+
+
 @router.get("/health")
 async def health_check():
     """Verifica que el sistema está operativo."""
