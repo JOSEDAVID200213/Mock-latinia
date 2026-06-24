@@ -1,0 +1,166 @@
+CONTEXTO DEL DOCUMENTO:
+El texto fue extraído mediante conversión automática y puede presentar imperfecciones menores (saltos de línea irregulares, palabras unidas ocasionalmente o pequeños errores tipográficos). 
+Ignora estos problemas menores de formato y prioriza el sentido general. A diferencia de un texto altamente ruidoso, aquí puedes confiar en la mayor parte de la estructura, pero mantén precaución ante datos numéricos o nombres propios extraños, marcándolos con "(verificar)" si tienes dudas.
+
+---
+
+Analiza en profundidad la siguiente transcripción de reunión y genera un documento de resumen completo y ejecutivo en formato Markdown.
+
+Extrae y organiza TODA la información disponible siguiendo esta estructura. Omite las secciones para las cuales genuinamente no existe información en la transcripción.
+
+---
+
+# 📋 [Nombre de la reunión — infiere un título descriptivo si no está explícito]
+
+## 🗓️ Información General
+
+| Campo | Detalle |
+|-------|---------|
+| **Fecha** | [Fecha detectada o "No especificada"] |
+| **Hora de inicio** | [Si se menciona] |
+| **Hora de fin / Duración** | [Si se menciona] |
+| **Modalidad** | [Presencial / Virtual / Híbrida — inferir si es posible] |
+| **Plataforma** | [Zoom, Teams, Meet, etc. — si se menciona] |
+| **Idioma(s) de la reunión** | [Listar todos los idiomas detectados] |
+| **Tipo de reunión** | [Standup / Planificación / Revisión / Kick-off / Retrospectiva / Comercial / etc.] |
+| **Calidad de la transcripción** | Intermedia (puede contener errores tipográficos menores) |
+
+---
+
+## 👥 Participantes
+
+Para cada participante identificado:
+
+| Nombre | Rol / Cargo | Empresa / Área | Observaciones |
+|--------|-------------|----------------|---------------|
+| [Nombre] | [Rol si se menciona] | [Empresa/Área si se menciona] | [Ej: facilitador, tomó el acta, llegó tarde] |
+
+**Total de participantes identificados:** [N]
+
+> Si hay participantes mencionados pero no identificados por nombre, listarlos como "Participante no identificado" con cualquier dato disponible.
+
+---
+
+## 🎯 Objetivos de la Reunión
+
+### Objetivo Principal
+[Descripción clara del propósito central de la reunión]
+
+### Objetivos Secundarios
+- [Objetivo secundario 1]
+- [Objetivo secundario 2]
+
+### ¿Se cumplieron los objetivos?
+[Sí / No / Parcialmente — con una breve justificación]
+
+---
+
+## 📌 Agenda y Temas Tratados
+
+Lista los temas en el orden en que fueron discutidos:
+
+1. **[Tema 1]** — [Breve descripción de qué se discutió]
+2. **[Tema 2]** — [Breve descripción]
+3. **[Tema N]** — [Breve descripción]
+
+---
+
+## ✅ Decisiones Tomadas
+
+Lista cada decisión como una afirmación clara y accionable:
+
+- **[Decisión 1]:** [Descripción detallada. Quién la tomó / quién la apoyó si se menciona]
+- **[Decisión 2]:** [Descripción detallada]
+
+---
+
+## 📝 Tareas y Compromisos
+
+| # | Tarea | Responsable | Fecha Límite | Prioridad | Estado |
+|---|-------|-------------|--------------|-----------|--------|
+| 1 | [Descripción clara de la tarea] | [Nombre o "Sin asignar"] | [Fecha o "Sin fecha"] | [Alta/Media/Baja — inferir si es posible] | Pendiente |
+| 2 | ... | ... | ... | ... | Pendiente |
+
+> Incluye TODOS los compromisos, acciones de seguimiento y "to-dos" mencionados, aunque sean informales.
+
+---
+
+## 💡 Ideas y Propuestas
+
+Ideas que se mencionaron pero que aún no se decidieron o aprobaron:
+
+- **[Idea/Propuesta 1]:** [Descripción] — Propuesta por: [Nombre si se menciona]
+- **[Idea/Propuesta 2]:** [Descripción]
+
+---
+
+## ⚠️ Riesgos, Problemas y Bloqueantes
+
+| Tipo | Descripción | Impacto | Responsable de gestionar |
+|------|-------------|---------|--------------------------|
+| Riesgo | [Descripción] | [Alto/Medio/Bajo] | [Nombre o "Sin asignar"] |
+| Problema actual | [Descripción] | [Alto/Medio/Bajo] | [Nombre o "Sin asignar"] |
+| Bloqueante | [Descripción] | [Alto/Medio/Bajo] | [Nombre o "Sin asignar"] |
+
+---
+
+## 🔗 Dependencias y Menciones Externas
+
+- **Proyectos / Sistemas mencionados:** [Lista]
+- **Herramientas / Tecnologías mencionadas:** [Lista]
+- **Equipos / Áreas externas mencionadas:** [Lista]
+- **Clientes / Stakeholders mencionados:** [Lista]
+- **Documentos / Recursos referenciados:** [Lista]
+
+---
+
+## 🌐 Contexto Multilingüe
+
+> Solo incluir esta sección si la reunión tuvo participantes en más de un idioma.
+
+- **Idiomas detectados:** [Lista]
+- **Participantes por idioma:** [Ej: Español — Juan, María; Inglés — John]
+- **Puntos discutidos en cada idioma:** [Resumen por idioma si aplica]
+- **Barreras de comunicación identificadas:** [Si las hubo]
+
+---
+
+## 📊 Métricas y Datos Mencionados
+
+Cualquier cifra, KPI, porcentaje, fecha objetivo o métrica mencionada:
+
+| Métrica / Dato | Valor | Contexto |
+|----------------|-------|---------|
+| [Nombre] | [Valor] | [Qué significa en el contexto de la reunión] |
+
+---
+
+## 🏁 Próximos Pasos
+
+Lista ordenada de las acciones que se acordaron como continuación:
+
+1. [Próximo paso 1] — Responsable: [Nombre] — Para: [Fecha]
+2. [Próximo paso 2] — Responsable: [Nombre] — Para: [Fecha]
+
+**Próxima reunión:** [Fecha y hora si se menciona, o "No programada"]
+
+---
+
+## 📝 Resumen Ejecutivo
+
+[Párrafo de 4-6 oraciones que capture la esencia de la reunión: contexto, lo más importante discutido, las decisiones clave tomadas, y los próximos pasos críticos. Redactado para un directivo que no asistió.]
+
+---
+
+## 🗣️ Citas y Momentos Destacados
+
+> Solo incluir si hay frases relevantes, compromisos verbales fuertes, o momentos de tensión/acuerdo notable.
+
+- **[Nombre]:** *"[Cita textual o paráfrasis fiel del texto]"*
+- **Momento destacado:** [Descripción de algún punto de inflexión en la reunión]
+
+---
+
+*Documento generado automáticamente a partir de transcripción con posibles imperfecciones menores. Revisar antes de distribuir.*
+
+TRANSCRIPCIÓN:

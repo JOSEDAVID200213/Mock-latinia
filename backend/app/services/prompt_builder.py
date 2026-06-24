@@ -13,8 +13,9 @@ logger = logging.getLogger(__name__)
 # Directorio donde viven los archivos de prompts
 PROMPTS_DIR = Path(__file__).resolve().parent.parent / "prompts"
 
-# Umbral de calidad: por debajo de este valor se usa el template "noisy"
-NOISY_QUALITY_THRESHOLD = 0.6
+# Umbrales de calidad para seleccionar el template
+CLEAN_QUALITY_THRESHOLD = 0.8
+NOISY_QUALITY_THRESHOLD = 0.45
 
 
 def _load_prompt(filename: str) -> str:
@@ -31,8 +32,9 @@ class PromptBuilder:
     """
     Construye el prompt final combinando:
     - base_system.txt  → system prompt (rol e instrucciones globales)
-    - extraction_clean.txt   → template para documentos limpios (quality >= 0.6)
-    - extraction_noisy.txt   → template para documentos con ruido (quality < 0.6)
+    - extraction_clean.txt   → template para documentos limpios (quality >= 0.8)
+    - extraction_intermediate.txt → template para calidad media (0.45 <= quality < 0.8)
+    - extraction_noisy.txt   → template para documentos con ruido (quality < 0.45)
 
     El template elegido ya incluye la instrucción al final 'TRANSCRIPCIÓN:'
     a la que se le concatena el texto extraído.
@@ -54,6 +56,8 @@ class PromptBuilder:
         # Seleccionar template según calidad del documento
         if quality_score < NOISY_QUALITY_THRESHOLD:
             template_file = "extraction_noisy.txt"
+        elif quality_score < CLEAN_QUALITY_THRESHOLD:
+            template_file = "extraction_intermediate.txt"
         else:
             template_file = "extraction_clean.txt"
 
@@ -86,10 +90,15 @@ class PromptBuilder:
                 f"🔴 PROMPT RUIDOSO seleccionado | quality={quality_score:.2f} "
                 f"(umbral={NOISY_QUALITY_THRESHOLD}) | format={format_type} | template={template_file}"
             )
+        elif quality_score < CLEAN_QUALITY_THRESHOLD:
+            logger.info(
+                f"🟡 PROMPT INTERMEDIO seleccionado | quality={quality_score:.2f} "
+                f"(umbrales={NOISY_QUALITY_THRESHOLD}-{CLEAN_QUALITY_THRESHOLD}) | format={format_type} | template={template_file}"
+            )
         else:
             logger.info(
                 f"🟢 PROMPT LIMPIO seleccionado  | quality={quality_score:.2f} "
-                f"(umbral={NOISY_QUALITY_THRESHOLD}) | format={format_type} | template={template_file}"
+                f"(umbral={CLEAN_QUALITY_THRESHOLD}) | format={format_type} | template={template_file}"
             )
 
         return system_prompt, user_prompt, template_file
@@ -101,11 +110,12 @@ class PromptBuilder:
         """
         try:
             system_size = len(_load_prompt("base_system.txt"))
-            template_file = (
-                "extraction_noisy.txt"
-                if quality_score < NOISY_QUALITY_THRESHOLD
-                else "extraction_clean.txt"
-            )
+            if quality_score < NOISY_QUALITY_THRESHOLD:
+                template_file = "extraction_noisy.txt"
+            elif quality_score < CLEAN_QUALITY_THRESHOLD:
+                template_file = "extraction_intermediate.txt"
+            else:
+                template_file = "extraction_clean.txt"
             template_size = len(_load_prompt(template_file))
             # Aproximación: 1 token ≈ 4 caracteres
             return (system_size + template_size) // 4
