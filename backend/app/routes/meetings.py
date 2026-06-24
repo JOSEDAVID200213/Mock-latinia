@@ -9,7 +9,7 @@ import tempfile
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, BackgroundTasks
 from fastapi.responses import FileResponse, JSONResponse
 
 from app.config import ALLOWED_EXTENSIONS, ALLOWED_MIME_TYPES, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB
@@ -21,6 +21,7 @@ from app.models.schemas import (
     MeetingRecord,
     ProcessingStatus,
     ProcessResponse,
+    ProcessStartedResponse,
     SourceFileInfo,
     UploadResponse,
 )
@@ -152,12 +153,60 @@ async def upload_and_analyze(
         except Exception:
             pass
 
-
-@router.post("/process/{meeting_id}", response_model=ProcessResponse)
-async def process_meeting(meeting_id: str):
+def _process_meeting_bg(meeting_id: str, session: dict):
     """
-    Fase 2: Confirma y ejecuta el procesamiento con LLM.
-    Usa el texto extraído en la fase 1.
+    Worker en segundo plano para procesar la reunión con LLM de manera asíncrona.
+    """
+    storage = get_storage_service()
+    record = storage.get_meeting(meeting_id)
+    if not record:
+        logger.error(f"Error BG Task: Meeting metadata not found para {meeting_id}")
+        return
+
+    try:
+        # Construir prompt adaptativo
+        system_prompt, user_prompt, template_name = prompt_builder.build(
+            transcript_text=session["text"],
+            quality_score=session["quality_score"],
+            format_type=session["format"],
+            meeting_name=session["meeting_name"],
+        )
+
+        # Generar resumen con LLM
+        llm = get_llm_service()
+        summary, processing_meta = llm.generate_summary(
+            meeting_id=meeting_id,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            template_name=template_name,
+            meeting_name=session["meeting_name"],
+        )
+
+        # Guardar resumen
+        storage.save_json(meeting_id, "summary.json", summary.model_dump(), meeting_name=session["meeting_name"])
+
+        # Actualizar metadata final
+        cost = cost_estimator.estimate(
+            text_tokens=processing_meta.input_tokens,
+            prompt_tokens=0,
+            estimated_output_tokens=processing_meta.output_tokens,
+        )
+
+        record.status = ProcessingStatus.COMPLETED
+        record.processing = processing_meta
+        record.summary = summary
+        storage.save_json(meeting_id, "metadata.json", record.model_dump(), meeting_name=session["meeting_name"])
+        logger.info(f"BG Task Completa para meeting {meeting_id}")
+
+    except Exception as e:
+        logger.error(f"Error procesando reunión en background {meeting_id}: {e}", exc_info=True)
+        record.status = ProcessingStatus.FAILED
+        storage.save_json(meeting_id, "metadata.json", record.model_dump())
+
+@router.post("/process/{meeting_id}", response_model=ProcessStartedResponse)
+async def process_meeting(meeting_id: str, background_tasks: BackgroundTasks):
+    """
+    Fase 2: Encola el procesamiento con LLM en segundo plano y retorna inmediatamente.
     """
     # Verificar que la reunión existe y tiene datos de sesión
     session = _session_data.get(meeting_id)
@@ -190,63 +239,17 @@ async def process_meeting(meeting_id: str):
         record.status = ProcessingStatus.PROCESSING
         storage.save_json(meeting_id, "metadata.json", record.model_dump())
 
-    try:
-        # Construir prompt adaptativo
-        system_prompt, user_prompt, template_name = prompt_builder.build(
-            transcript_text=session["text"],
-            quality_score=session["quality_score"],
-            format_type=session["format"],
-            meeting_name=session["meeting_name"],
-        )
+    # Limpiar datos de sesión ya que pasamos el diccionario completo al hilo background
+    _session_data.pop(meeting_id, None)
 
-        # Generar resumen con LLM
-        llm = get_llm_service()
-        summary, processing_meta = llm.generate_summary(
-            meeting_id=meeting_id,
-            system_prompt=system_prompt,
-            user_prompt=user_prompt,
-            template_name=template_name,
-            meeting_name=session["meeting_name"],
-        )
+    # Añadir a las tareas en segundo plano
+    background_tasks.add_task(_process_meeting_bg, meeting_id, session)
 
-        # Guardar resumen
-        storage.save_json(meeting_id, "summary.json", summary.model_dump(), meeting_name=session["meeting_name"])
-
-        # Actualizar metadata final
-        cost = cost_estimator.estimate(
-            text_tokens=processing_meta.input_tokens,
-            prompt_tokens=0,  # Ya incluidos en input_tokens real
-            estimated_output_tokens=processing_meta.output_tokens,
-        )
-
-        if record:
-            record.status = ProcessingStatus.COMPLETED
-            record.processing = processing_meta
-            record.summary = summary
-            storage.save_json(meeting_id, "metadata.json", record.model_dump(), meeting_name=session["meeting_name"])
-
-        # Limpiar datos de sesión
-        _session_data.pop(meeting_id, None)
-
-        return ProcessResponse(
-            meeting_id=meeting_id,
-            meeting_name=session["meeting_name"],
-            summary=summary,
-            processing=processing_meta,
-            cost=cost,
-        )
-
-    except LLMError as e:
-        if record:
-            record.status = ProcessingStatus.FAILED
-            storage.save_json(meeting_id, "metadata.json", record.model_dump())
-        raise HTTPException(502, detail=str(e))
-    except Exception as e:
-        logger.error(f"Error procesando reunión {meeting_id}: {e}", exc_info=True)
-        if record:
-            record.status = ProcessingStatus.FAILED
-            storage.save_json(meeting_id, "metadata.json", record.model_dump())
-        raise HTTPException(500, detail=f"Error interno: {str(e)}")
+    return ProcessStartedResponse(
+        meeting_id=meeting_id,
+        message="El procesamiento ha iniciado en segundo plano.",
+        status=ProcessingStatus.PROCESSING
+    )
 
 
 @router.get("/", response_model=list[MeetingListItem])

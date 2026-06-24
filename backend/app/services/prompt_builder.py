@@ -63,8 +63,22 @@ class PromptBuilder:
         # Reemplazar placeholder {format_type} si existe en el template
         user_template = user_template.replace("{format_type}", format_type or "desconocido")
 
+        # Lógica dinámica: Si detectamos que es una presentación (pptx) agregamos instrucciones extra
+        if format_type == "pptx":
+            presentation_instructions = (
+                "\n\n### INSTRUCCIONES ESPECIALES PARA PRESENTACIONES (PPTX) ###\n"
+                "El texto a continuación proviene de las diapositivas de una presentación. "
+                "Por favor, enfócate también en extraer:\n"
+                "- El título principal de la presentación y la temática central.\n"
+                "- Los puntos clave de cada diapositiva importante.\n"
+                "- Conclusiones clave que el presentador intentó transmitir.\n"
+                "Asegúrate de estructurar el resumen de forma que tenga sentido como una 'exposición' "
+                "además de los acuerdos y próximos pasos."
+            )
+            user_template += presentation_instructions
+
         # Concatenar la transcripción al final del template
-        user_prompt = user_template + "\n" + transcript_text
+        user_prompt = user_template + "\n\nTRANSCRIPCIÓN:\n" + transcript_text
 
         logger.info(
             f"Prompt construido: template={template_file}, "

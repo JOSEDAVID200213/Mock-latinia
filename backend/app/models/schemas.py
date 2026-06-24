@@ -142,6 +142,13 @@ class UploadResponse(BaseModel):
     text_preview: str = Field(description="Primeros 500 chars del texto extraído")
 
 
+class ProcessStartedResponse(BaseModel):
+    """Respuesta tras encolar el procesamiento en background."""
+    meeting_id: str
+    message: str
+    status: ProcessingStatus
+
+
 class ProcessResponse(BaseModel):
     """Respuesta tras procesar con el LLM."""
     meeting_id: str

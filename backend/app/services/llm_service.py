@@ -67,7 +67,7 @@ class LLMService:
                 response_mime_type="text/plain",
             )
 
-            max_retries = 1
+            max_retries = 3
             for attempt in range(max_retries + 1):
                 try:
                     # Enviar system_prompt + user_prompt a Gemini
@@ -129,9 +129,14 @@ class LLMService:
                 except LLMError:
                     raise
                 except Exception as e:
+                    error_msg = str(e)
                     if attempt < max_retries:
-                        logger.warning(f"Fallo en intento {attempt + 1}: {str(e)}. Reintentando en 2s...")
-                        time.sleep(2)
+                        if "429" in error_msg or "Quota exceeded" in error_msg:
+                            logger.warning(f"Límite de API (429). Esperando 12s para reintento {attempt + 1} de {max_retries}...")
+                            time.sleep(12)
+                        else:
+                            logger.warning(f"Fallo en intento {attempt + 1}: {error_msg}. Reintentando en 3s...")
+                            time.sleep(3)
                     else:
                         raise
 
