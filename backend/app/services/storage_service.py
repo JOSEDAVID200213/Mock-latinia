@@ -162,8 +162,8 @@ class LocalStorage(StorageBackend):
                 
                 if data.get("status") == "success":
                     logger.info("Carpeta y Google Docs creados via Apps Script: %s", data.get("folderUrl"))
-                    # Devolvemos el URL del acta/resumen para que el frontend lo abra
-                    return data.get("summaryDocUrl", data.get("folderUrl", ""))
+                    # Devolvemos el URL de la carpeta para que el frontend la abra
+                    return data.get("folderUrl", data.get("summaryDocUrl", ""))
                 elif "url" in data:
                     return data["url"]
             except Exception as e:
