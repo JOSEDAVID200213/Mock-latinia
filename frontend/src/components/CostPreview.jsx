@@ -1,112 +1,155 @@
 import React, { useState } from 'react';
-import { Play, FileText, AlertCircle, Coins } from 'lucide-react';
 import { api } from '../services/api';
 
 const CostPreview = ({ uploadData, onProcessComplete, onCancel }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
 
-  const { meeting_id, extraction, cost_estimate, text_preview } = uploadData;
+  const { meeting_id, extraction, text_preview } = uploadData;
 
   const handleConfirm = async () => {
     setIsProcessing(true);
     setError(null);
     try {
-      const result = await api.processMeeting(meeting_id);
-      onProcessComplete(result);
+      await api.processMeeting(meeting_id);
+      
+      // Polling para revisar el estado en background
+      const pollInterval = setInterval(async () => {
+        try {
+          const statusResult = await api.getMeeting(meeting_id);
+          if (statusResult.status === 'completed') {
+            clearInterval(pollInterval);
+            onProcessComplete(statusResult);
+          } else if (statusResult.status === 'failed') {
+            clearInterval(pollInterval);
+            setError('Hubo un error al procesar el archivo en el servidor.');
+            setIsProcessing(false);
+          }
+          // Si es 'processing', sigue esperando
+        } catch (pollErr) {
+          console.error("Error en polling:", pollErr);
+        }
+      }, 3000); // Preguntar cada 3 segundos
+
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Error al iniciar el procesamiento');
       setIsProcessing(false);
     }
   };
 
-  const getQualityBadge = (score) => {
-    if (score >= 0.8) return <span className="badge badge-success">Óptima</span>;
-    if (score >= 0.5) return <span className="badge badge-warning">Media</span>;
-    return <span className="badge badge-error">Baja</span>;
-  };
-
   return (
-    <div className="card animate-fade-in">
-      <h2 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <FileText color="var(--accent-primary)" />
-        Pre-Análisis Completado
-      </h2>
-
-      {error && (
-        <div className="badge badge-error" style={{ marginBottom: '1rem', width: '100%', padding: '1rem', justifyContent: 'center' }}>
-          {error}
-        </div>
-      )}
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
-        <div style={{ background: 'var(--bg-surface-elevated)', padding: '1rem', borderRadius: 'var(--radius-md)' }}>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '0.25rem' }}>Texto Extraído</p>
-          <p style={{ fontSize: '1.2rem', fontWeight: '600' }}>{extraction.word_count.toLocaleString()} palabras</p>
-          <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Calidad OCR:</span>
-            {getQualityBadge(extraction.quality_score)}
-          </div>
-        </div>
-
-        <div style={{ background: 'var(--bg-surface-elevated)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-            <Coins size={14} /> Tokens Estimados
-          </p>
-          <p style={{ fontSize: '1.2rem', fontWeight: '600' }}>{cost_estimate.total_estimated_tokens.toLocaleString()}</p>
-          <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--success)' }}>
-            ✓ Free Tier (Costo: ${cost_estimate.estimated_cost_usd.toFixed(4)})
-          </p>
-        </div>
-      </div>
-
-      <div style={{ marginBottom: '2rem' }}>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>Preview del texto (Primeros 500 caractéres)</p>
-        <div style={{ 
-          background: 'var(--bg-main)', 
-          padding: '1rem', 
-          borderRadius: 'var(--radius-md)',
-          fontSize: '0.9rem',
-          color: 'var(--text-muted)',
-          fontFamily: 'monospace',
-          maxHeight: '150px',
-          overflowY: 'auto'
-        }}>
-          {text_preview}
-        </div>
+    <div className="max-w-4xl mx-auto w-full animate-in fade-in zoom-in duration-500">
+      {/* Page Header */}
+      <div className="mb-12 text-center md:text-left">
+        <h1 className="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-4">Confirmar Transcripción</h1>
+        <p className="font-body-lg text-on-surface-variant max-w-2xl">Por favor confirma que este es el archivo correcto antes de generar el resumen con IA.</p>
       </div>
       
-      {extraction.extraction_warnings.length > 0 && (
-        <div style={{ background: 'var(--warning-bg)', color: 'var(--warning)', padding: '1rem', borderRadius: 'var(--radius-md)', marginBottom: '2rem', display: 'flex', gap: '0.5rem', fontSize: '0.9rem' }}>
-          <AlertCircle size={18} style={{ flexShrink: 0 }} />
-          <div>
-            <strong>Avisos de extracción:</strong>
-            <ul style={{ marginLeft: '1.5rem', marginTop: '0.25rem' }}>
-              {extraction.extraction_warnings.map((w, i) => <li key={i}>{w}</li>)}
-            </ul>
+      {error && (
+          <div className="mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="bg-error-container/20 border border-error/20 rounded-2xl p-4 flex items-start gap-4">
+              <span className="material-symbols-outlined text-error mt-0.5">error</span>
+              <div className="space-y-1">
+                <p className="text-error font-bold text-sm">Error</p>
+                <p className="text-on-error-container text-xs leading-relaxed">{error}</p>
+              </div>
+            </div>
           </div>
-        </div>
       )}
 
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      {/* Metrics Dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="bg-white/[0.03] backdrop-blur-[20px] border border-white/[0.08] rounded-3xl p-6 flex items-center justify-between hover:border-primary/30 hover:bg-white/[0.05] transition-all duration-300">
+          <div>
+            <p className="text-label-caps text-on-surface-variant mb-1 font-label-caps">PALABRAS EXTRAÍDAS</p>
+            <h3 className="font-headline-md text-on-surface text-2xl">{extraction?.word_count?.toLocaleString() || 0}</h3>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+            <span className="material-symbols-outlined text-primary">format_list_numbered</span>
+          </div>
+        </div>
+        
+        <div className="bg-white/[0.03] backdrop-blur-[20px] border border-white/[0.08] rounded-3xl p-6 flex items-center justify-between hover:border-primary/30 hover:bg-white/[0.05] transition-all duration-300">
+          <div>
+            <p className="text-label-caps text-on-surface-variant mb-1 font-label-caps">CALIDAD OCR</p>
+            <div className="flex items-center gap-2">
+               <h3 className="font-headline-md text-on-surface text-2xl">{(extraction?.quality_score * 100).toFixed(0)}%</h3>
+               {extraction?.quality_score >= 0.8 ? (
+                 <span className="px-2 py-1 text-[10px] rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">ÓPTIMA</span>
+               ) : (
+                 <span className="px-2 py-1 text-[10px] rounded-full bg-warning/20 text-warning border border-warning/30">MEDIA/BAJA</span>
+               )}
+            </div>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+            <span className="material-symbols-outlined text-emerald-400">check_circle</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Editor / Console Block */}
+      <div className="bg-white/[0.06] backdrop-blur-[40px] border border-white/[0.15] rounded-3xl overflow-hidden mb-12 flex flex-col shadow-2xl">
+        {/* Console Header */}
+        <div className="bg-white/5 px-6 py-3 border-b border-white/10 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-white/10"></div>
+            <div className="w-3 h-3 rounded-full bg-white/10"></div>
+            <div className="w-3 h-3 rounded-full bg-white/10"></div>
+            <span className="ml-4 font-label-caps text-on-surface-variant text-[10px] opacity-40">TRANSCRIPT_PREVIEW_V1.TXT</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="font-label-caps text-on-surface-variant text-[10px] opacity-40">UTF-8</span>
+            <span className="material-symbols-outlined text-on-surface-variant text-sm">terminal</span>
+          </div>
+        </div>
+
+        {/* Console Content */}
+        <div className="bg-surface-container-lowest h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-white/5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full font-code-preview p-6 text-on-surface-variant leading-relaxed relative">
+          <div className="flex gap-6">
+            <div className="space-y-4 text-sm md:text-base font-mono whitespace-pre-wrap">
+              {text_preview || "No preview available."}
+            </div>
+          </div>
+        </div>
+
+        {/* Console Footer */}
+        <div className="bg-white/5 px-6 py-2 border-t border-white/10 flex justify-between items-center">
+          <p className="font-label-caps text-[10px] text-on-surface-variant opacity-40">PREVIEW PRE-PROCESAMIENTO</p>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+            <p className="font-label-caps text-[10px] text-emerald-500">READY TO PROCESS</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
         <button 
-          className="btn btn-secondary" 
+          className="w-full md:w-auto px-8 py-4 rounded-2xl border border-white/10 text-on-surface-variant font-bold hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50"
           onClick={onCancel}
           disabled={isProcessing}
-          style={{ flex: 1 }}
         >
-          Cancelar
+          <span className="material-symbols-outlined text-xl transition-transform group-hover:-translate-x-1">arrow_back</span>
+          Cancelar y subir otro
         </button>
+        
         <button 
-          className="btn btn-primary" 
+          className="w-full md:w-auto px-10 py-4 bg-gradient-to-br from-[#5E5CE6] to-[#c2c1ff] text-white font-bold rounded-2xl shadow-[0_0_30px_0_rgba(94,92,230,0.2)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 relative overflow-hidden disabled:opacity-80 disabled:cursor-wait disabled:hover:scale-100"
           onClick={handleConfirm}
           disabled={isProcessing}
-          style={{ flex: 2 }}
         >
           {isProcessing ? (
-             <><span className="animate-spin">🤖</span> Procesando con IA...</>
+            <>
+              <div className="relative z-10 flex items-center justify-center h-5 w-5">
+                <div className="absolute w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+              </div>
+              <span className="relative z-10 opacity-90">Procesando...</span>
+            </>
           ) : (
-             <><Play size={18} /> Procesar Resumen</>
+             <>
+               <span className="relative z-10">Generar Resumen</span>
+               <span className="material-symbols-outlined relative z-10">auto_awesome</span>
+             </>
           )}
         </button>
       </div>

@@ -1,103 +1,106 @@
-import React from 'react';
-import { CheckCircle2, ExternalLink, FileText } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
 
 const SummaryView = ({ result, onNewMeeting }) => {
   const { meeting_name, summary, processing } = result;
+  const cardRef = useRef(null);
+
+  // Parallax / Glass reflection effect
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    cardRef.current.style.setProperty('--mouse-x', `${x}px`);
+    cardRef.current.style.setProperty('--mouse-y', `${y}px`);
+  };
 
   return (
-    <div className="animate-fade-in" style={{ 
-      maxWidth: '600px', 
-      margin: '2rem auto', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      gap: '2rem',
-      textAlign: 'center'
-    }}>
-      <div className="card" style={{ 
-        padding: '3rem 2rem', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        gap: '1.5rem',
-        border: '1px solid rgba(99, 102, 241, 0.2)',
-        boxShadow: 'var(--shadow-glow)'
-      }}>
-        <div style={{ 
-          background: 'var(--success-bg)', 
-          color: 'var(--success)', 
-          borderRadius: '50%', 
-          padding: '1rem',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 0 15px rgba(16, 185, 129, 0.2)'
-        }}>
-          <CheckCircle2 size={48} />
-        </div>
+    <div className="flex-1 flex items-center justify-center py-6 md:py-12 w-full animate-in fade-in zoom-in duration-500">
+      <div 
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        className="w-full max-w-2xl bg-surface-container-low/40 backdrop-blur-[30px] rounded-[2rem] border border-white/10 p-8 md:p-16 text-center bg-white/[0.03] transition-all duration-300 hover:border-primary/30 relative overflow-hidden group"
+      >
+        {/* Glow effect on hover mapped to cursor position */}
+        <div 
+          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: `radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(94, 92, 230, 0.06), transparent 40%)`
+          }}
+        />
 
-        <div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
-            ¡Procesamiento Completado!
-          </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            El acta y el resumen han sido generados y guardados en Google Drive.
-          </p>
-        </div>
+        {/* Atmospheric light leak */}
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[80px]"></div>
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#6904c5]/10 rounded-full blur-[80px]"></div>
 
-        <div style={{ 
-          width: '100%', 
-          background: 'var(--bg-surface-elevated)', 
-          padding: '1.25rem', 
-          borderRadius: 'var(--radius-md)',
-          textAlign: 'left',
-          border: '1px solid var(--border-color)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.75rem'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Reunión:</span>
-            <span style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '0.95rem' }}>{meeting_name}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Tiempo de procesamiento:</span>
-            <span style={{ fontWeight: '600', color: 'var(--accent-primary)', fontSize: '0.95rem' }}>{processing?.processing_time_seconds || '0'}s</span>
+        {/* Centered Success State */}
+        <div className="relative mb-10 inline-block animate-[float_6s_ease-in-out_infinite]">
+          <div className="w-32 h-32 md:w-40 md:w-40 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+            <span 
+              className="material-symbols-outlined text-7xl md:text-8xl text-primary drop-shadow-[0_0_20px_rgba(194,193,255,0.4)]" 
+              style={{ fontVariationSettings: "'FILL' 1" }}
+            >
+              check_circle
+            </span>
           </div>
         </div>
 
-        {summary?.doc_url ? (
+        <h2 className="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-8 leading-tight">
+          ¡Procesamiento Completado!
+        </h2>
+
+        {/* Info Cards Bento-ish */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+          <div className="bg-white/[0.03] backdrop-blur-[20px] border border-white/[0.08] rounded-2xl p-6 flex items-start gap-4 text-left">
+            <div className="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-primary">label</span>
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-on-surface-variant text-label-caps font-label-caps mb-1 opacity-60">NOMBRE DE LA REUNIÓN</p>
+              <p className="text-on-surface font-headline-md text-base md:text-lg truncate" title={meeting_name}>
+                {meeting_name}
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-white/[0.03] backdrop-blur-[20px] border border-white/[0.08] rounded-2xl p-6 flex items-start gap-4 text-left">
+            <div className="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-tertiary">timer</span>
+            </div>
+            <div>
+              <p className="text-on-surface-variant text-label-caps font-label-caps mb-1 opacity-60">TIEMPO DE PROCESAMIENTO</p>
+              <p className="text-on-surface font-headline-md text-base md:text-lg">
+                {processing?.processing_time_seconds || '0'}s
+                <span className="text-tertiary text-sm font-normal ml-2 opacity-80">Rápido</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Primary Actions */}
+        <div className="space-y-4 relative z-10">
           <a 
-            href={summary.doc_url} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="btn btn-primary" 
-            style={{ 
-              width: '100%', 
-              justifyContent: 'center', 
-              padding: '0.85rem 1.5rem',
-              fontSize: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              textDecoration: 'none',
-              borderRadius: 'var(--radius-md)'
-            }}
+            href={summary?.doc_url}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full md:w-auto min-w-[320px] bg-gradient-to-br from-[#5E5CE6] to-[#c2c1ff] py-5 px-8 rounded-3xl text-white font-bold inline-flex items-center justify-center gap-3 shadow-[0_0_30px_0_rgba(94,92,230,0.2)] hover:scale-[1.02] active:scale-[0.98] transition-all group"
           >
-            <FileText size={18} />
-            Abrir acta en Google Docs
-            <ExternalLink size={14} />
+            <span className="material-symbols-outlined group-hover:translate-y-[-2px] transition-transform">folder_open</span>
+            <span className="text-lg">Abrir Carpeta de la Reunión</span>
+            <span className="material-symbols-outlined text-sm opacity-60 ml-2">open_in_new</span>
           </a>
-        ) : (
-          <p style={{ color: 'var(--error)' }}>
-            Error: No se pudo recuperar el enlace del documento de Google Docs.
-          </p>
-        )}
-      </div>
-
-      <div>
-        <button className="btn btn-secondary" onClick={onNewMeeting} style={{ padding: '0.75rem 2rem' }}>
-          Procesar otra reunión
-        </button>
+          
+          <div className="pt-4">
+            <button 
+              onClick={onNewMeeting}
+              className="text-on-surface-variant hover:text-primary transition-all font-body-md inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full hover:bg-white/5 active:scale-95"
+            >
+              <span className="material-symbols-outlined">restart_alt</span>
+              Procesar otra reunión
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

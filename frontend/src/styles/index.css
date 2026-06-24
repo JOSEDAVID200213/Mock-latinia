@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ===== VARIABLES GLOABLES Y TEMA OSCURO ===== */
 :root {
   /* Paleta principal: Oscuro elegante con acentos violeta/azul */

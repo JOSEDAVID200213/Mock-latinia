@@ -1,16 +1,24 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" className="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meeting Summary AI</title>
-    <!-- Google Fonts: Inter -->
+    <!-- Google Fonts: Inter, Hanken Grotesk, Geist -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;600;700&family=Geist:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@400,0,0,24&display=swap" rel="stylesheet"/>
   </head>
-  <body>
+  <body class="bg-background text-on-surface selection:bg-primary/30 min-h-screen font-body-md overflow-x-hidden">
+    <!-- Background Atmospheric Elements -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+      <div class="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
+      <div class="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-[#d8b9ff]/10 blur-[120px] rounded-full"></div>
+    </div>
+    
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
